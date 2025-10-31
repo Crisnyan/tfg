@@ -1,0 +1,146 @@
+Half Reaction,Standard Reduction Potential (V)
+Li+(aq) + e- -> Li(s),-3.05
+Rb+(aq) + e- -> Rb(s),-2.98
+K+(aq) + e- -> K(s),-2.93
+Cs+(aq) + e- -> Cs(s),-2.92
+Ba2+(aq) + 2e- -> Ba(s),-2.91
+Sr2+(aq) + 2e- -> Sr(s),-2.89
+Be2+(aq) + 2e- -> Be(s),-2.76
+Na+(aq) + e- -> Na(s),-2.71
+Mg2+(aq) + 2e- -> Mg(s),-2.38
+H2 + 2e- -> 2H-, -2.25
+Ca2+(aq) + 2e- -> Ca(s),-2.85
+Al3+(aq) + 3e- -> Al(s),-1.66
+Ti2+(aq) + 2e- -> Ti(s),-1.63
+TiO(s) + 2H+ + 2e- -> Ti(s) + H2O,-1.31
+Ti2O3(s) + 2H+ + 2e- -> 2TiO(s) + H2O,-1.23
+Ti3+(aq) + 3e- -> Ti(s),-1.21
+Mn2+(aq) + 2e- -> Mn(s),-1.18
+V2+(aq) + 2e- -> V(s),-1.13
+Sn(s) + 4H+ + 4e- -> SnH4(g),-1.07
+SiO2(s) + 4H+ + 4e- -> Si(s) + 2H2O,-0.91
+B(OH)3(aq) + 3H+ + 3e- -> B(s) + 3H2O,-0.89
+TiO2+(aq) + 2H+ + 4e- -> Ti(s) + H2O,-0.86
+2 H2O(l) + 2e- -> H2(g) + 2 OH-(aq),-0.83
+Zn2+(aq) + 2e- -> Zn(s),-0.76
+Cr3+(aq) + 3e- -> Cr(s),-0.74
+Au(CN)2-(aq) + e- -> Au(s) + 2 CN-(aq),-0.60
+2TiO2(s) + 2H+ + 2e- -> Ti2O3(s) + H2O,-0.56
+Ga3+(aq) + 3e- -> Ga(s),-0.53
+H3PO2(aq) + H+ + e- -> P(s) + 2H2O,-0.51
+H3PO3(aq) + 3H+ + 3e- -> P(s) + 3H2O,-0.50
+H3PO3(aq) + 2H+ + 2e- -> H3PO2(aq) + H2O,-0.50
+Fe2+(aq) + 2e- -> Fe(s),-0.44
+2CO2(g) + 2H+(aq) + 2e- -> HOOCCOOH(aq),-0.43
+Cr3+(aq) + e- -> Cr2+(aq),-0.42
+Cd2+(aq) + 2e- -> Cd(s),-0.40
+PbSO4(s) + 2e- -> Pb(s) + SO42-(aq),-0.36
+GeO2(s) + 2H+ + 2e- -> GeO(s) + H2O,-0.37
+In3+(aq) + 3e- -> In(s),-0.34
+Tl+(aq) + e- -> Tl(s),-0.34
+Ge(s) + 4H+ + 4e- -> GeH4(g),-0.29
+Co2+(aq) + 2e- -> Co(s),-0.28
+H3PO4(aq) + 2H+ + 2e- -> H3PO3(aq) + H2O,-0.28
+V3+(aq) + e- -> V2+(aq),-0.26
+Ni2+(aq) + 2e- -> Ni(s),-0.25
+As(s) + 3H+ + 3e- -> AsH3(g),-0.23
+MoO2(s) + 4H+ + 4e- -> Mo(s) + 2H2O,-0.15
+Si(s) + 4H+ + 4e- -> SiH4(g),-0.14
+Sn2+(aq) + 2e- -> Sn(s),-0.14
+O2(g) + H+ + e- -> HO2*(aq),-0.13
+Pb2+(aq) + 2e- -> Pb(s),-0.13
+WO2(s) + 4H+ + 4e- -> W(s),-0.12
+CO2(g) + 2H+ + 2e- -> HCOOH(aq),-0.11
+Se(s) + 2H+ + 2e- -> H2Se(g),-0.11
+CO2(g) + 2H+ + 2e- -> CO(g) + H2O,-0.11
+SnO(s) + 2H+ + 2e- -> Sn(s) + H2O,-0.10
+SnO2(s) + 2H+ + 2e- -> SnO(s) + H2O,-0.09
+WO3(aq) + 6H+ + 6e- -> W(s),-0.09
+P(s) + 3H+ + 3e- -> PH3(g),-0.06
+HCOOH(aq) + 2H+ + 2e- -> HCHO(aq) + H2O,-0.03
+2H+(aq) + 2e- -> H2(g),0.00
+H2MoO4(aq) + 6H+ + 6e- -> Mo(s) + 4H2O,0.11
+Ge4+(aq) + 4e- -> Ge(s),0.12
+C(s) + 4H+ + 4e- -> CH4(g),0.13
+HCHO(aq) + 2H+ + 2e- -> CH3OH(aq),0.13
+S(s) + 2H+ + 2e- -> H2S(g),0.14
+Sn4+(aq) + 2e- -> Sn2+(aq),0.15
+Cu2+(aq) + e- -> Cu+(aq),0.16
+HSO4-(aq) + 3H+ + 2e- -> 2H2O(l) + SO2(aq),0.16
+SO42-(aq) + 4H+ + 2e- -> 2H2O(l) + SO2(aq),0.17
+SbO+ + 2H+ + 3e- -> Sb(s) + H2O,0.20
+H3AsO3(aq) + 3H+ + 3e- -> As(s) + 3H2O,0.24
+GeO(s) + 2H+ + 2e- -> Ge(s) + H2O,0.26
+Hg2Cl2 + 2e- -> 2Hg + 2Cl-,0.27
+Bi3+(aq) + 3e- -> Bi(s),0.32
+Cu2+(aq) + 2e- -> Cu(s),0.34
+[Fe(CN)6]3-(aq) + e- -> [Fe(CN)6]4-(aq),0.36
+VO2+(aq) + 2H+ + e- -> V3+(aq) + H2O,0.361
+O2(g) + 2H2O(l) + 4e- -> 4OH-(aq),0.40
+H2MoO4 + 6H+ + 3e- -> Mo3+(aq),0.43
+CH3OH(aq) + 2H+ + 2e- -> CH4(g) + H2O,0.50
+SO2(aq) + 4H+ + 4e- -> S(s) + 2H2O,0.50
+Cu+(aq) + e- -> Cu(s),0.52
+CO(g) + 2H+ + 2e- -> C(s) + H2O,0.52
+I2(s) + 2e- -> 2I-(aq),0.54
+I3-(aq) + 2e- -> 3I-(aq),0.54
+[AuI4]- (aq) + 3e- -> Au(s) + 4I-(aq),0.56
+H3AsO4(aq) + 2H+ + 2e- -> H3AsO3(aq) + H2O,0.56
+[AuI2]- (aq) + e- -> Au(s) + 2I-(aq),0.58
+MnO4-(aq) + 2H2O(l) + 3e- -> MnO2(s) + 4 OH-(aq),0.59
+S2O32- + 6H+ + 4e- -> 2S(s) + 3H2O,0.60
+H2MoO4(aq) + 2H+ + 2e- -> MoO2(s) + 2H2O,0.65
+O2(g) + 2H+ + 2e- -> H2O2(aq),0.70
+Tl3+(aq) + 3e- -> Tl(s),0.72
+H2SeO3(aq) + 4H+ + 4e- -> Se(s) + 3H2O,0.74
+Fe3+(aq) + e- -> Fe2+(aq),0.77
+Hg22+(aq) + 2e- -> 2Hg(l),0.79
+Ag+(aq) + e- -> Ag(s),0.80
+NO3-(aq) + 2H+(aq) + e- -> NO2(g) + H2O(l),0.80
+[AuBr4]- (aq) + 3e- -> Au(s) + 4Br-(aq),0.85
+Hg2+(aq) + 2e- -> Hg(l),0.85
+MnO4-(aq) + H+ + e- -> HMnO4-(aq),0.90
+2Hg2+(aq) + 2e- -> Hg22+(aq),0.91
+[AuCl4]- (aq) + 3e- -> Au(s) + 4Cl-(aq),0.93
+MnO2(s) + 4H+ + e- -> Mn3+(aq) + 2H2O,0.95
+[AuBr2]- (aq) + e- -> Au(s) + 2Br-(aq),0.96
+Br2(l) + 2e- -> 2Br-(aq),1.07
+Br2(aq) + 2e- -> 2Br-(aq),1.09
+IO3-(aq) + 5H+ + 4e- -> HIO(aq) + 2H2O,1.13
+[AuCl2]- (aq) + e- -> Au(s) + 2Cl-(aq),1.15
+HSeO4- (aq) + 3H+ + 2e- -> H2SeO3(aq) + H2O,1.15
+Ag2O(s) + 2H+ + 2e- -> 2Ag(s),1.17
+ClO3-(aq) + 2H+ + e- -> ClO2-(g) + H2O,1.18
+ClO2(g) + H+ + e- -> HClO2(aq),1.19
+2IO3-(aq) + 12H+ + 10e- -> I2(s) + 6H2O,1.20
+ClO4-(aq) + 2H+ + 2e- -> ClO3-(aq) + H2O,1.20
+O2(g) + 4H+ + 4e- -> 2H2O,1.23
+MnO2(s) + 4H+ + 2e- -> Mn2+(aq) + 2H2O,1.23
+Tl3+(aq) + 2e- -> Tl+(s),1.25
+Cl2(g) + 2e- -> 2Cl-(aq),1.36
+Cr2O72-(aq) + 14H+ + 6e- -> 2Cr3+(aq) + 7H2O,1.33
+CoO2(s) + 4H+ + e- -> Co3+(aq) + 2H2O,1.42
+2HIO(aq) + 2H+ + 2e- -> I2(s) + 2H2O,1.44
+BrO3-(aq) + 5H+ + 4e- -> HBrO(aq) + 2H2O,1.45
+2BrO3- + 12H+ + 10e- -> Br2(l) + 6H2O,1.48
+2ClO3- + 12H+ + 10e- -> Cl2(g) + 6H2O,1.49
+MnO4-(aq) + 8H+ + 5e- -> Mn2+(aq) + 4H2O,1.51
+O2* + 2H+ + 2e- -> H2O2(aq),1.51
+Au3+(aq) + 3e- -> Au(s),1.52
+NiO2(s) + 4H+ + 2e- -> Ni2+(aq),1.59
+2HClO(aq) + 2H+ + 2e- -> Cl2(g) + 2H2O,1.63
+Ag2O3(s) + 6H+ + 4e- -> 2Ag+(aq) + 3H2O,1.67
+HClO2(aq) + 2H+ + 2e- -> HClO(aq) + H2O,1.67
+Au+(aq) + e- -> Au(aq),1.68
+Pb4+(aq) + 2e- -> Pb2+(aq),1.69
+MnO4-(aq) + 4H+ + 3e- -> MnO2(s) + 2H2O,1.70
+H2O2(aq) + 2H+ + 2e- -> 2H2O,1.76
+AgO(s) + 2H+ + e- -> Ag+(aq) + H2O,1.77
+Au+(aq) + e- -> Au(s),1.83
+BrO4-(aq) + 2H+ + 2e- -> BrO3-(aq) + H2O,1.85
+Co3+(aq) + e- -> Co2+(aq),1.92
+Ag2+(aq) + e- -> Ag+(aq),1.98
+S2O82- + 2e- -> 2SO42-,2.07
+HMnO4(aq) + 3H+ + 3e- -> MnO2(s) + 2H2O,2.09
+F2(g) + 2e- -> 2F-(aq),2.87
+F2(g) + 2H+ + 2e- -> 2HF(aq),3.05
