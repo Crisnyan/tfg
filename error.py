@@ -65,6 +65,38 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("c_ox_cat")
+        case "intensity":
+            try:
+                temp = float(input("Set the intensity of the battery:\n"))
+                if temp == 0:
+                    temp = 1e-12
+                if temp < 0:
+                    temp *= -1
+            except Exception as e:
+                print("Error:", e)
+                temp = error("intensity")
+        case "resistance":
+            try:
+                temp = float(input("Set the internal resistance of the battery:\n"))
+                if temp == 0:
+                    temp = 1e-12
+                while temp < 0:
+                    print('Error: resistance cannot be negative') 
+                    temp = error("resistance")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("resistance")
+        case "Q_nom":
+            try:
+                temp = float(input("Set the nominal capacity of the battery (mAh):\n"))
+                if temp == 0:
+                    temp = 1e-12
+                while temp < 0:
+                    print('Error: the nominal capacity cannot be negative') 
+                    temp = error("Q_nom")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("Q_nom")
         case "jo":
             try:
                 temp = float(input("Set initial jo:\n"))
@@ -80,21 +112,41 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("beta_c")
+        case "delta":
+            try:
+                temp = float(input("Set diffusion layer:\n"))
+                while temp < 0:
+                    print('Error: The diffusion layer cannot be negative') 
+                while temp > 1:
+                    print('Error: The diffusion layer must be 1 or less') 
+            except Exception as e:
+                print("Error:", e)
+                temp = error("delta")
+        case "SOC":
+            try:
+                temp = float(input("Set state of charge of the battery (%):\n"))
+                while temp < 0:
+                    print('Error: The state of charge of the battery cannot be negative') 
+                while temp > 100:
+                    print('Error: The state of charge must be 100% or less') 
+            except Exception as e:
+                print("Error:", e)
+                temp = error("SOC")
         case "ko":
             try:
-                temp = float(input("Set ko:\n"))
+                temp = float(input("Set ko (mol/m^3):\n"))
             except Exception as e:
                 print("Error:", e)
                 temp = error("ko")
         case "eta":
             try:
-                temp = float(input("Set the overpotential:\n"))
+                temp = float(input("Set the overpotential (V):\n"))
             except Exception as e:
                 print("Error:", e)
                 temp = error("eta")
         case "E_ap":
             try:
-                temp = float(input("Set the applied potential:\n"))
+                temp = float(input("Set the applied potential (V):\n"))
             except Exception as e:
                 print("Error:", e)
                 temp = error("E_ap")

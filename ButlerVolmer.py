@@ -64,7 +64,7 @@ def ButlerVolmer(db: bool) -> float:
         ko = e.error("ko")
         beta_c = e.error("beta_c")
         beta_a = 1.0 - beta_c
-        E_ap_an = e.error("E_ap")
+        E_ap = e.error("E_ap")
         E_ap_cat = e.error("E_ap")
         E_eq, n_el_ox, n_el_red = getEeq(c_red, c_ox, T)
 
