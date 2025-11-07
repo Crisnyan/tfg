@@ -9,7 +9,7 @@ def interpOCV(val: float) -> float :
     x1 = 0.0000
     x2 = 0.0000
 
-    print(f'val: {val}')
+    # print(f'val: {val}')
     keys = list(parser.BatteryValuesFile.keys())
     if val == keys[-1]:
         return parser.BatteryValuesFile[keys[-1]]
@@ -18,7 +18,7 @@ def interpOCV(val: float) -> float :
         x1 = keys[i - 1]
         x2 = keys[i]
         if x1 <= val <= x2:
-            print(f'x1: {x1}, x2: {x2}')
+            # print(f'x1: {x1}, x2: {x2}')
             y1 = parser.BatteryValuesFile[x1]
             y2 = parser.BatteryValuesFile[x2]
             t = (y2 - y1) / (x2 - x1)
@@ -37,7 +37,7 @@ def BatteryDischarge() -> None:
     voltages = []
     dSOC = - I * dt / (3600.0 * Q_nom)
 
-    print(f'state: {State}, dSOC: {dSOC}')
+    # print(f'state: {State}, dSOC: {dSOC}')
     while State > 0:
         V = interpOCV(State) - I * R_int
         voltages.append(V)
