@@ -12,7 +12,7 @@ def error(type: str) -> int | float:
                 temp = error("n_el")
         case "temperature":
             try:
-                temp = float(input("Set the desired temperature:\n"))
+                temp = float(input("Set the desired temperature (K):\n"))
                 if temp == 0:
                     temp = 1e-12
                 while temp < 0:
@@ -67,7 +67,7 @@ def error(type: str) -> int | float:
                 temp = error("c_ox_cat")
         case "intensity":
             try:
-                temp = float(input("Set the intensity of the battery:\n"))
+                temp = float(input("Set the intensity of the battery (A):\n"))
                 if temp == 0:
                     temp = 1e-12
                 if temp < 0:
@@ -77,7 +77,7 @@ def error(type: str) -> int | float:
                 temp = error("intensity")
         case "resistance":
             try:
-                temp = float(input("Set the internal resistance of the battery:\n"))
+                temp = float(input("Set the internal resistance of the battery (ohms):\n"))
                 if temp == 0:
                     temp = 1e-12
                 while temp < 0:
@@ -88,7 +88,7 @@ def error(type: str) -> int | float:
                 temp = error("resistance")
         case "Q_nom":
             try:
-                temp = float(input("Set the nominal capacity of the battery (mAh):\n"))
+                temp = float(input("Set the nominal capacity of the battery (A/h):\n"))
                 if temp == 0:
                     temp = 1e-12
                 while temp < 0:
@@ -99,7 +99,7 @@ def error(type: str) -> int | float:
                 temp = error("Q_nom")
         case "jo":
             try:
-                temp = float(input("Set initial jo:\n"))
+                temp = float(input("Set initial jo (A/m^2):\n"))
             except Exception as e:
                 print("Error:", e)
                 temp = error("jo")

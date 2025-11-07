@@ -54,6 +54,8 @@ def main() -> None:
         print("Loading", end='')
         parser.stdRedPotFile = parser.parse("standard_potentials.csv")
         print(".", end='')
+        parser.BatteryFile = parser.parse("OCVvsSOC.csv")
+        parser.BatteryValuesFile = parser.convert(parser.BatteryFile)
         print(".", end='')
         print(".")
         resp = selection()

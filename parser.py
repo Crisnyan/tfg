@@ -1,6 +1,7 @@
 
 stdRedPotFile : dict[str, float] = {}
 BatteryFile : dict[str, float] = {}
+BatteryValuesFile : dict[float, float] = {}
 
 def parse(name: str) -> dict[str, float]: 
     d: dict[str, float] = {}
@@ -14,3 +15,9 @@ def parse(name: str) -> dict[str, float]:
     except OSError:
         print(f'Could not read file: ', name)
         exit()
+
+def convert(strdict: dict[str, float]) -> dict[float, float]:
+    d: dict[float, float] = {}
+    for key, value in strdict.items():
+        d[float(key)] = value
+    return d
