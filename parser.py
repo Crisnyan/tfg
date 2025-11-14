@@ -1,6 +1,5 @@
 
 stdRedPotFile : dict[str, float] = {}
-BatteryFile : dict[str, float] = {}
 BatteryValuesFile : dict[float, float] = {}
 
 def parse(name: str) -> dict[str, float]: 

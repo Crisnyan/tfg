@@ -24,26 +24,29 @@ def interpOCV(val: float) -> float :
             t = (y2 - y1) / (x2 - x1)
             # print(f'x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}')
             return y1 + t * (val - x1)
-
+    return 0.0
 
 def BatteryDischarge() -> None:
     I = e.error("intensity")
     R_int = e.error("resistance")
     Q_nom = e.error("Q_nom")
     State = e.error("SOC") / 100
+    endtime = float(e.error("endtime"))
     t = 0.0
     dt = 1.0
-    times = [] 
     voltages = []
     dSOC = - I * dt / (3600.0 * Q_nom)
+    if endtime == 0.0:
+        endtime = 9e34
 
     # print(f'state: {State}, dSOC: {dSOC}')
-    while State > 0:
+    while State > 0 and t <= endtime:
         V = interpOCV(State) - I * R_int
         voltages.append(V)
-        times.append(t)
         State = max(0, State + dSOC)
         t += dt
+    voltages = np.array(voltages)
+    times = np.arange(len(voltages) * dt)
     #print(f'times: {times}')
     #print(f'voltages: {voltages}')
     plt.plot(times, voltages, 'o')
@@ -54,5 +57,3 @@ def BatteryDischarge() -> None:
     plt.savefig(out, dpi=150, bbox_inches='tight')
     print(f'Saved plot to: {out}')
     plt.close()
-
-

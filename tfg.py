@@ -1,27 +1,20 @@
 from ButlerVolmer import ButlerVolmer
 from BatteryDischarge import BatteryDischarge
 from LimitIntensity  import LimitIntensity
-from CyclicVoltamperometry import CyclicVoltamperometry
+from CyclicVoltammetry import CyclicVoltammetry
 import parser
 
 def ButlerVolmerSelector() -> None:
     print("Butler-Volmer has been selected\n")
-    resp = input("Use table of Standard reduction potentials?\nyes/no\n")
-    while resp != "yes" and resp != "no":
-        resp = input("Use table of Standard reduction potentials?\nyes/no\n")
     try:
-        if resp == "yes":
-            print(f"j = {ButlerVolmer(True)}")
-        else:
-            print(f"j = {ButlerVolmer(False)}")
+        ButlerVolmer()
     except Exception as e:
         print("Error:", e)
-
 
 def BatteryDischargeSelector() -> None:
     print("Battery discharge has been selected")
     try:
-        print(f"j = {BatteryDischarge()}")
+       BatteryDischarge()
     except Exception as e:
         print("Error:", e)
 
@@ -32,19 +25,19 @@ def LimitIntensitySelector() -> None:
     except Exception as e:
         print("Error:", e)
 
-def CyclicVoltamperometrySelector() -> None:
+def CyclicVoltammetrySelector() -> None:
     print("Cyclic voltamperometry has been selected")
     try:
-        print(f"j = {CyclicVoltamperometry()}")
+        print(f"j = {CyclicVoltammetry()}")
     except Exception as e:
         print("Error:", e)
 
 def selection() -> int:
     print("""Select the desired use mode:
           (1) Butler-Volmer
-          (2) Battery discharge
-          (3) Limit intensity
-          (4) Cyclic voltamperometry
+          (2) Limit intensity
+          (3) Cyclic voltammetry
+          (4) Battery discharge
           (5) Exit""")
     resp = int(input())
     return resp
@@ -54,8 +47,7 @@ def main() -> None:
         print("Loading", end='')
         parser.stdRedPotFile = parser.parse("standard_potentials.csv")
         print(".", end='')
-        parser.BatteryFile = parser.parse("OCVvsSOC.csv")
-        parser.BatteryValuesFile = parser.convert(parser.BatteryFile)
+        parser.BatteryValuesFile = parser.convert(parser.parse("OCVvsSOC.csv"))
         print(".", end='')
         print(".")
         resp = selection()
@@ -66,11 +58,11 @@ def main() -> None:
             case 1:
                 ButlerVolmerSelector()
             case 2:
-                BatteryDischargeSelector()
-            case 3:
                 LimitIntensitySelector()
+            case 3:
+                CyclicVoltammetrySelector()
             case 4:
-                CyclicVoltamperometrySelector()
+                BatteryDischargeSelector()
             case 5:
                 exit()
     except Exception as e:
