@@ -1,4 +1,3 @@
-
 stdRedPotFile : dict[str, float] = {}
 BatteryValuesFile : dict[float, float] = {}
 
@@ -20,3 +19,14 @@ def convert(strdict: dict[str, float]) -> dict[float, float]:
     for key, value in strdict.items():
         d[float(key)] = value
     return d
+
+def getElectrons(elec: str) -> int:
+    mult_el = elec[elec.find("e-") - 1]
+    print(mult_el)
+    if str.isdigit(mult_el):
+        n_el = int(mult_el)
+    else:
+        n_el = 1
+    return n_el
+
+

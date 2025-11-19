@@ -5,23 +5,14 @@ import parser
 import error as e
 import matplotlib.pyplot as plt
 
-def getElectrons(elec: str) -> int:
-    mult_el = elec[elec.find("e-") - 1]
-    print(mult_el)
-    if str.isdigit(mult_el):
-        n_el = int(mult_el)
-    else:
-        n_el = 1
-    return n_el
-
 def getEeq(c_red_an: float, c_ox_an: float,  c_red_cat: float, c_ox_cat: float, T: float) -> tuple[float, int, int] :
     R = cnt.gas_constant
     F = cnt.value("Faraday constant")
     str_cat, Eo_cat = getVal("E_cat")
     str_an, Eo_an = getVal("E_an")
 
-    n_cat = getElectrons(str_cat)
-    n_an = getElectrons(str_an)
+    n_cat = parser.getElectrons(str_cat)
+    n_an = parser.getElectrons(str_an)
 
     E_cat =  Eo_cat - (R * T / (n_cat * F)) * m.log(c_red_cat / c_ox_cat)
     E_an =  Eo_an - (R * T / (n_an * F)) * m.log(c_red_an / c_ox_an)
