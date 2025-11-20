@@ -22,7 +22,6 @@ def convert(strdict: dict[str, float]) -> dict[float, float]:
 
 def getElectrons(elec: str) -> int:
     mult_el = elec[elec.find("e-") - 1]
-    print(mult_el)
     if str.isdigit(mult_el):
         n_el = int(mult_el)
     else:
