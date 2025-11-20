@@ -21,14 +21,14 @@ def BatteryDischargeSelector() -> None:
 def LimitIntensitySelector() -> None:
     print("Limit intensity has been selected")
     try:
-        print(f"j = {LimitIntensity()}")
+        LimitIntensity()
     except Exception as e:
         print("Error:", e)
 
 def CyclicVoltammetrySelector() -> None:
     print("Cyclic voltamperometry has been selected")
     try:
-        print(f"j = {CyclicVoltammetry()}")
+        CyclicVoltammetry()
     except Exception as e:
         print("Error:", e)
 
@@ -36,8 +36,8 @@ def selection() -> int:
     print("""Select the desired use mode:
           (1) Butler-Volmer
           (2) Limit intensity
-          (3) Cyclic voltammetry
-          (4) Battery discharge
+          (3) Battery discharge
+          (4) Cyclic voltammetry
           (5) Exit""")
     resp = int(input())
     return resp
@@ -60,9 +60,9 @@ def main() -> None:
             case 2:
                 LimitIntensitySelector()
             case 3:
-                CyclicVoltammetrySelector()
-            case 4:
                 BatteryDischargeSelector()
+            case 4:
+                CyclicVoltammetrySelector()
             case 5:
                 exit()
     except Exception as e:

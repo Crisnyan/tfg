@@ -32,26 +32,24 @@ def getVal() -> tuple[int, float] :
     return n_el, value
 
 def thomas(a_temp, b_temp, c_temp, d_temp):
-    n = len(d_temp)                                      # number of unknowns
+    n = len(d_temp)
 
     a, b, c, d = map(np.array, (a_temp, b_temp, c_temp, d_temp)) 
-    for i in range(1, n):                           # FORWARD ELIMINATION
-        m = a[i] / b[i - 1]                           # compute multiplier that eliminates a[i]
-        b[i] = b[i] - m * c[i - 1]                    # update pivot in row i
-        d[i] = d[i] - m * d[i - 1]                    # update RHS in row i
+    for i in range(1, n):
+        m = a[i] / b[i - 1]
+        b[i] = b[i] - m * c[i - 1]
+        d[i] = d[i] - m * d[i - 1]
 
     x = np.zeros(n)
-    x[-1] = d[-1] / b[-1]                           # back-sub: solve last equation
+    x[-1] = d[-1] / b[-1]
 
-    for i in range(n - 2, -1, -1):                    # BACK SUBSTITUTION
-        x[i] = (d[i] - c[i] * x[i+1]) / b[i]        # solve each earlier x[i]
+    for i in range(n - 2, -1, -1):
+        x[i] = (d[i] - c[i] * x[i+1]) / b[i]
     return x
 
 def rhs(conc: np.ndarray, c0: float, bulk: float, lam: float) -> np.ndarray:
     res = 0.5 * lam * conc[0:-2] + (1.0 - lam) * conc[1:-1] + 0.5 * lam * conc[2:]
-    # incorporate new surface value Co0 into first RHS entry (ghost/elimination)
     res[0] += 0.5 * lam * c0
-    # incorporate far-field Dirichlet (node nx) — use bulk values at new time (assumed equal to bulk)
     res[-1] += 0.5 * lam * bulk
     return res
 
@@ -74,12 +72,8 @@ def reaction_rate_and_partials(Co0: float, Cr0: float, E_ap: float, params: dict
 
     r = k_ox * Cr0 - k_red * Co0
 
-    # analytic partials (derived in the notes)
-    # dr/dCo0 = (1 - alpha) * k0 * (j_a + j_c) / Co0
-    # dr/dCr0 = alpha * r / Cr0
     dr_dCo0 = -k_red
     dr_dCr0 = k_ox
-    # protect division by zero
 
     return r, dr_dCo0, dr_dCr0
 
@@ -91,7 +85,6 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
     dx = params["dx"]
     D_coef = params["D"]
 
-    # initial guess: previous surface concentrations
     n_unknowns = Co.size - 2
 
     low_diag = np.full(n_unknowns, -0.5 * lam) 
@@ -104,115 +97,50 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
 
         do = rhs(Co, Co0, Co[-1], lam)
         dr = rhs(Cr, Cr0, Cr[-1], lam)
-        # solve linear systems for interiors
+
         Co_interior = thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), do)
         Cr_interior = thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), dr)
-
-        # compute residuals R_O and R_R (ghost-point derived)
-        # R_O = Co0 - Co_prev0 - lam*( 2*(C1 - Co0) - (2*dx/D)*r_surf )
 
         r_surf, dr_dCo0, dr_dCr0 = reaction_rate_and_partials(Co0, Cr0, E_ap, params)
 
         Co1 = Co_interior[0]
         Cr1 = Cr_interior[0]
 
-        #resid_ox = Co0 - Co[0] - lam * ( 2.0 * (Co1 - Co0) - (2.0 * dx / D_coef) * r_surf )
-        #resid_red = Cr0 - Cr[0] - lam * ( 2.0 * (Cr1 - Cr0) + (2.0 * dx / D_coef) * r_surf )
         resid_ox = Co0 - Co1 - dx / D_coef * r_surf
         resid_red = Cr0 - Cr1 + dx / D_coef * r_surf # Signo opuesto para reducción
 
 
         if max(abs(resid_ox), abs(resid_red)) < tol:
-            # assemble full arrays for return: insert interior into full profile
             return Co0, Cr0, Co_interior, Cr_interior, r_surf
 
         b_sens = np.zeros(n_unknowns)
         b_sens[0] = 0.5 * lam
         s_vec = thomas(low_diag, mid_diag, upp_diag, b_sens)
-        s_factor = s_vec[0] # dC1 / dC0
-        
-        # J = [ dR_ox/dCo0   dR_ox/dCr0 ]
-        #     [ dR_red/dCo0  dR_red/dCr0 ]
-        
-        # R_ox = Co0 - Co1(Co0) - scale * r(Co0, Cr0)
-        # dR_ox/dCo0 = 1 - s_factor - scale * dr/dCo0
-        # dR_ox/dCr0 = - scale * dr/dCr0
-        
+        s_factor = s_vec[0]
+
         J11 = 1.0 - s_factor - dx / D_coef * dr_dCo0
         J12 = - dx / D_coef * dr_dCr0
-        
-        # R_red = Cr0 - Cr1(Cr0) + scale * r(Co0, Cr0)
-        # dR_red/dCo0 = scale * dr/dCo0
-        # dR_red/dCr0 = 1 - s_factor + scale * dr/dCr0
-        
+
         J21 = dx / D_coef * dr_dCo0
         J22 = 1.0 - s_factor + dx / D_coef * dr_dCr0
-        
+
         J = np.array([[J11, J12], [J21, J22]])
         R_vec = np.array([resid_ox, resid_red])
-        
+
         try:
             delta = np.linalg.solve(J, -R_vec)
         except np.linalg.LinAlgError:
-            delta = -R_vec * 0.1 # Fallback
-            
-        # --- CORRECCIÓN CRÍTICA: ACTUALIZAR U ---
+            delta = -R_vec * 0.1
+
         u += delta
-        
-        # Evitar valores negativos físicos
         u[u < 0] = 1e-15
 
     return u[0], u[1], Co_interior, Cr_interior, r_surf
-        # # 5) compute sensitivity scalars s_C = dC1/dCo0 and s_R = dR1/dCr0
-        # #    Solve A * s = b_C where b_C has 0.5*lam at index0 and zeros elsewhere.
-        # bC = np.zeros(n_unknowns, dtype=float)
-        # bC[0] = 0.5 * lam
-        # sC_vec = np.array(thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), bC.copy()), dtype=float)
-        # s_C = sC_vec[0]
-        #
-        # bR = np.zeros(n_unknowns, dtype=float)
-        # bR[0] = 0.5 * lam
-        # sR_vec = np.array(thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), bR.copy()), dtype=float)
-        # s_R = sR_vec[0]
-        #
-        # # 6) build analytic Jacobian (2x2) using derived formulas
-        # pref = lam * (2.0 * dx / D_coef)
-        # J11 = 1.0 - lam * (2.0 * s_C - 2.0) + pref * dr_dCo0
-        # J12 = pref * dr_dCr0
-        # J21 = - pref * dr_dCo0
-        # J22 = 1.0 - lam * (2.0 * s_R - 2.0) - pref * dr_dCr0
-        #
-        # J = np.array([[J11, J12], [J21, J22]], dtype=float)
-        # Rvec = np.array([resid_ox, resid_red], dtype=float)
-        #
-        # # 7) solve small 2x2 linear system J du = -R
-        # #    fallback to small step if solve fails
-        # try:
-        #     du = np.linalg.solve(J, -Rvec)
-        # except np.linalg.LinAlgError:
-        #     # singular Jacobian: take small damped step towards negative residual
-        #     du = -Rvec * 1e-3
-    # return Co0, Cr0, Co_interior, Cr_interior # after max_iter: return best effort
-    #Co0, Cr0 = max(u[0], eps), max(u[1], eps)
-
-    # recompute final interiors for returned surface values
-    # d_o = 0.5 * lam * Co[0:-2] + (1.0 - lam) * Co[1:-1] + 0.5 * lam * Co[2:]
-    # d_r = 0.5 * lam * Cr[0:-2] + (1.0 - lam) * Cr[1:-1] + 0.5 * lam * Cr[2:]
-    # d_o[0] += 0.5 * lam * Co0
-    # d_r[0] += 0.5 * lam * Cr0
-    # d_o[-1] += 0.5 * lam * Co[-1]
-    # d_r[-1] += 0.5 * lam * Cr[-1]
-    #
-    # Co_int = np.array(thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), d_o.copy()), dtype=float)
-    # Cr_int = np.array(thomas(low_diag.copy(), mid_diag.copy(), upp_diag.copy(), d_r.copy()), dtype=float)
-    #
-    # r_final, _, _ = reaction_rate_and_partials(Co0, Cr0, E_ap, params)
-    #return Co0, Cr0, Co_int, Cr_int, r_final
 
 def CyclicVoltammetry():
     F = cnt.value("Faraday constant")
     R = cnt.gas_constant
-    T = 298.15
+    T = e.error("temperature")
     nx = 300
 
     E_start = e.error("E_start")
@@ -235,11 +163,12 @@ def CyclicVoltammetry():
 
     Co = np.full(nx + 1, bulk_Co)
     Cr = np.full(nx + 1, bulk_Cr)
+    j = np.empty_like(t)
     lam =  D_coef * dt / (dx**2)
 
     params = {
         "k0": k0,
-        "beta_c": beta_c,      # your beta_a
+        "beta_c": beta_c,
         "n_el": n_el,
         "F": F,
         "R": R,
@@ -249,33 +178,28 @@ def CyclicVoltammetry():
         "E_std": E_std
     }
 
-    j = np.empty_like(t)
-    #print(f't_max: {t_max}\n, x_max: {x_max}\n, dt: {dt}\n, dx: {dx}\n\n')
-    #print(f'time array: {t}\n, time len: {len(t)}\n,  potential array: {E}\n,  potential len: {len(E)}\n, Co array: {Co}\n, Cr array: {Cr}\n')
     for i in range(len(t) - 1):
 
         newCo = np.empty_like(Co)
         newCr = np.empty_like(Cr)
 
         Co0_new, Cr0_new, Co_int, Cr_int, r_surf = newton_thomas(Co, Cr, E[i], lam, params)
-        
-        # Reconstruir vectores completos para el siguiente paso
+
         newCo = np.zeros_like(Co)
         newCr = np.zeros_like(Cr)
-        
+
         newCo[0] = Co0_new
         newCo[1:-1] = Co_int
-        newCo[-1] = bulk_Co # Dirichlet
-        
+        newCo[-1] = bulk_Co
+
         newCr[0] = Cr0_new
         newCr[1:-1] = Cr_int
-        newCr[-1] = bulk_Cr # Dirichlet
+        newCr[-1] = bulk_Cr
 
         Co = newCo
         Cr = newCr
 
         j[i] = n_el * F * r_surf
-
 
     j[-1] = j[-2]
     plt.plot(E, j)

@@ -19,6 +19,15 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("n_step")
+        case "rpm_max":
+            try:
+                temp = int(input("Set the max RPM:\n"))
+                while temp < 500:
+                    print('Error: the max RPM must be at least 500') 
+                    temp = error("rpm_max")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("rpm_max")
         case "temperature":
             try:
                 temp = float(input("Set the desired temperature (K):\n"))
@@ -66,9 +75,41 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("diff")
+        case "viscosity":
+            try:
+                temp = float(input("Set the viscosity (m^2/s):\n"))
+                while temp < 0:
+                    print('Error: the viscosity cannot be negative') 
+                    temp = error("viscosity")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("viscosity")
+        case "area":
+            try:
+                temp = float(input("Set the electrode area (m^2):\n"))
+                if temp == 0:
+                    print('Error: area cannot be 0, set to 1') 
+                    temp = 1.0
+                while temp < 0:
+                    print('Error: concentration cannot be negative') 
+                    temp = error("area")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("area")
+        case "C0":
+            try:
+                temp = float(input("Set the initial concentration (mol/m^3):\n"))
+                if temp == 0:
+                    temp = 1.0
+                while temp < 0:
+                    print('Error: concentration cannot be negative') 
+                    temp = error("C0")
+            except Exception as e:
+                print("Error:", e)
+                temp = error("C0")
         case "Cob":
             try:
-                temp = float(input("Set the concentration of the oxidized species:\n"))
+                temp = float(input("Set the concentration of the oxidized species (mol/m^3):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -79,7 +120,7 @@ def error(type: str) -> int | float:
                 temp = error("Cob")
         case "Crb":
             try:
-                temp = float(input("Set the concentration of the reduced species:\n"))
+                temp = float(input("Set the concentration of the reduced species (mol/m^3):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -90,7 +131,7 @@ def error(type: str) -> int | float:
                 temp = error("Crb")
         case "c_red_an":
             try:
-                temp = float(input("Set the concentration of the reduced species in the anode (1 for solids):\n"))
+                temp = float(input("Set the concentration of the reduced species in the anode in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -101,7 +142,7 @@ def error(type: str) -> int | float:
                 temp = error("c_red_an")
         case "c_ox_an":
             try:
-                temp = float(input("Set the concentration of the oxidized species in the anode (1 for solids):\n"))
+                temp = float(input("Set the concentration of the oxidized species in the anode in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -112,7 +153,7 @@ def error(type: str) -> int | float:
                 temp = error("c_ox_an")
         case "c_red_cat":
             try:
-                temp = float(input("Set the concentration of the reduced species in the cathode (1 for solids):\n"))
+                temp = float(input("Set the concentration of the reduced species in the cathode in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -123,7 +164,7 @@ def error(type: str) -> int | float:
                 temp = error("c_red_cat")
         case "c_ox_cat":
             try:
-                temp = float(input("Set the concentration of the oxidized species in the cathode (1 for solids):\n"))
+                temp = float(input("Set the concentration of the oxidized species in the cathode in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
@@ -179,18 +220,6 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("beta_c")
-        case "delta":
-            try:
-                temp = float(input("Set diffusion layer:\n"))
-                while temp < 0:
-                    print('Error: The diffusion layer cannot be negative') 
-                    temp = error("delta")
-                while temp > 1:
-                    print('Error: The diffusion layer must be 1 or less') 
-                    temp = error("delta")
-            except Exception as e:
-                print("Error:", e)
-                temp = error("delta")
         case "SOC":
             try:
                 temp = float(input("Set state of charge of the battery (%):\n"))
