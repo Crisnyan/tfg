@@ -35,7 +35,7 @@ def BatteryDischarge() -> None:
     t = 0.0
     dt = 1.0
     voltages = []
-    dSOC = - I * dt / (3600.0 * Q_nom)
+    dSOC = - I * dt / (Q_nom)
     if endtime == 0.0:
         endtime = 9e34
 

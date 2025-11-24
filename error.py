@@ -196,7 +196,7 @@ def error(type: str) -> int | float:
                 temp = error("resistance")
         case "Q_nom":
             try:
-                temp = float(input("Set the nominal capacity of the battery (A/h):\n"))
+                temp = float(input("Set the nominal capacity of the battery (A/s):\n"))
                 if temp == 0:
                     temp = 1e-12
                 while temp < 0:

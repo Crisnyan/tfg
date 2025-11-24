@@ -3,7 +3,7 @@ import error as e
 import scipy.constants as cnt
 import matplotlib.pyplot as plt
 
-def LimitIntensity():
+def LimitIntensity() -> None:
     n_el = e.error("n_el")
     F = cnt.value("Faraday constant")
     D_coef = e.error("diff")
@@ -15,7 +15,7 @@ def LimitIntensity():
     rpm = np.linspace(100, rpm_max, 50)
     omega = 2 * np.pi * rpm / 60.0
 
-    #Levich 
+    # INFO: Levich 
     delta = 1.61 * (D_coef**(1/3)) * (omega**(-0.5)) * (nu**(1/6))
     i_lim = n_el * F * D_coef * C0 * A / delta
 
