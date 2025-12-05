@@ -129,50 +129,28 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("Crb")
-        case "c_red_an":
+        case "c_red":
             try:
-                temp = float(input("Set the concentration of the reduced species in the anode in mol/m^3 (1 for solids):\n"))
+                temp = float(input("Set the concentration of the reduced species in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
                     print('Error: concentration cannot be negative') 
-                    temp = error("c_red_an")
+                    temp = error("c_red")
             except Exception as e:
                 print("Error:", e)
-                temp = error("c_red_an")
-        case "c_ox_an":
+                temp = error("c_red")
+        case "c_ox":
             try:
-                temp = float(input("Set the concentration of the oxidized species in the anode in mol/m^3 (1 for solids):\n"))
+                temp = float(input("Set the concentration of the oxidized species in mol/m^3 (1 for solids):\n"))
                 if temp == 0:
                     temp = 1.0
                 while temp < 0:
                     print('Error: concentration cannot be negative') 
-                    temp = error("c_ox_an")
+                    temp = error("c_ox")
             except Exception as e:
                 print("Error:", e)
-                temp = error("c_ox_an")
-        case "c_red_cat":
-            try:
-                temp = float(input("Set the concentration of the reduced species in the cathode in mol/m^3 (1 for solids):\n"))
-                if temp == 0:
-                    temp = 1.0
-                while temp < 0:
-                    print('Error: concentration cannot be negative') 
-                    temp = error("c_red_cat")
-            except Exception as e:
-                print("Error:", e)
-                temp = error("c_red_cat")
-        case "c_ox_cat":
-            try:
-                temp = float(input("Set the concentration of the oxidized species in the cathode in mol/m^3 (1 for solids):\n"))
-                if temp == 0:
-                    temp = 1.0
-                while temp < 0:
-                    print('Error: concentration cannot be negative') 
-                    temp = error("c_ox_cat")
-            except Exception as e:
-                print("Error:", e)
-                temp = error("c_ox_cat")
+                temp = error("c_ox")
         case "intensity":
             try:
                 temp = float(input("Set the intensity of the battery (A):\n"))
@@ -232,12 +210,12 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("SOC")
-        case "k0":
+        case "j0":
             try:
-                temp = float(input("Set k0 (mol/m^3):\n"))
+                temp = float(input("Set j0 (A/m^2):\n"))
             except Exception as e:
                 print("Error:", e)
-                temp = error("k0")
+                temp = error("j0")
         case "eta":
             try:
                 temp = float(input("Set the overpotential (V):\n"))
@@ -267,5 +245,8 @@ def error(type: str) -> int | float:
                 temp = float(input("Set the potential of the reference electrode, 0V for SHE (V):\n"))
             except Exception as e:
                 print("Error:", e)
-                temp = error("E_ap")
+                temp = error("E_ref")
+        case _:
+            print(f"ERROR, unbound")
+                
     return temp

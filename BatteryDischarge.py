@@ -52,8 +52,8 @@ def BatteryDischarge() -> None:
     plt.plot(times, voltages, 'o')
     plt.ylabel('Voltage (V)')
     plt.xlabel('time (s)')
-     
-    out = "/tmp/battery_discharge.png"
+    name = input("Save the plot as:")
+    out = "/tmp/" + name + ".png"
     plt.savefig(out, dpi=150, bbox_inches='tight')
-    print(f'Saved plot to: {out}')
+    print(f'Saved plot as: {out}')
     plt.close()

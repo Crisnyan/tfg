@@ -5,33 +5,30 @@ import parser
 import error as e
 import matplotlib.pyplot as plt
 
-def getEeq(c_red_an: float, c_ox_an: float,  c_red_cat: float, c_ox_cat: float, T: float) -> tuple[float, int, int]:
+def getEeq(c_red: float, c_ox: float, T: float) -> tuple[float, int]:
     R = cnt.gas_constant
     F = cnt.value("Faraday constant")
-    str_cat, Eo_cat = getEo("cathodic")
-    print(f'Eo cat = {Eo_cat}')
-    str_an, Eo_an = getEo("anodic")
-    #print(f'Eo an = {Eo_an}')
 
-    n_cat = parser.getElectrons(str_cat)
-    n_an = parser.getElectrons(str_an)
+    str_half, Eo = getEo()
+    print(f'Eo half-reaction = {Eo}')
 
-    E_cat =  Eo_cat - (R * T / (n_cat * F)) * m.log(c_red_cat / c_ox_cat)
-    E_an =  Eo_an - (R * T / (n_an * F)) * m.log(c_red_an / c_ox_an)
+    n_el = parser.getElectrons(str_half)
+    nu_red, nu_ox = parser.getStoichCoeffs(str_half)
 
-    E_cell = E_cat - E_an
-    return E_cell, n_cat, n_an 
+    E_eq =  Eo - (R * T / (n_el * F)) * m.log(c_red ** nu_red / c_ox ** nu_ox)
 
-def getEo(type: str) -> tuple[str, float]:
+    return E_eq, n_el
+
+def getEo() -> tuple[str, float]:
 
     try:
-        resp = input(f'Input the half reaction of the {type} electrode:\n')
+        resp = input(f'Input the half reaction happening on the working electrode:\n')
         value = parser.stdRedPotFile.get(resp)
         if value == None:
-            resp, value = getEo(type)
+            resp, value = getEo()
     except Exception as e:
         print("Error:", e)
-        resp, value = getEo(type)
+        resp, value = getEo()
     return resp, value
 
 def ButlerVolmer() -> None:
@@ -39,24 +36,22 @@ def ButlerVolmer() -> None:
     R = cnt.gas_constant
     T = e.error("temperature")
 
-    c_red_an = e.error("c_red_an")
-    c_ox_an = e.error("c_ox_an")
-    c_red_cat = e.error("c_red_cat")
-    c_ox_cat = e.error("c_ox_cat")
-    k0 = e.error("k0")
+    c_red = e.error("c_red")
+    c_ox = e.error("c_ox")
+    j0 = e.error("j0")
     beta_c = e.error("beta_c")
     beta_a = 1.0 - beta_c
     E_ap = e.error("E_ap")
     E_ref = e.error("E_ref")
-    E_eq, n_el_cat, n_el_an = getEeq(c_red_an, c_ox_an, c_red_cat, c_ox_cat, T)
-    #print(f'E eq: {E_eq}, n el anodic: {n_el_an}, n el cathodic: {n_el_cat}')
+    E_eq, n_el = getEeq(c_red, c_ox, T)
+    print(f'E eq: {E_eq}, n,el: {n_el}')
     nsteps = e.error("n_step")
 
     eta = E_ap - E_eq - E_ref
     etas = np.linspace(-abs(eta), abs(eta), int(nsteps))
-    ja = c_ox_an * np.exp(F * n_el_an * beta_a * etas / (T * R))
-    jc = c_red_cat * np.exp(F * n_el_cat * -beta_c * etas / (T * R))
-    currents = F * k0 * (ja - jc) 
+    ja = np.exp(F * n_el * beta_a * etas / (T * R))
+    jc = np.exp(F * n_el * -beta_c * etas / (T * R))
+    currents = j0 * (ja - jc) 
 
     plt.plot(etas, currents, 'o')
     plt.ylabel('Current density (A/m^2)')

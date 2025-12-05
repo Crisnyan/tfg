@@ -21,11 +21,26 @@ def convert(strdict: dict[str, float]) -> dict[float, float]:
     return d
 
 def getElectrons(elec: str) -> int:
-    mult_el = elec[elec.find("e-") - 1]
+    mult_el = elec[elec.find("e-") - 2]
     if str.isdigit(mult_el):
         n_el = int(mult_el)
     else:
         n_el = 1
     return n_el
 
+def getStoichCoeffs(elec: str) -> tuple[int, int]:
 
+    parts = elec.split("->")
+    ox, red = parts[0].strip(), parts[1].strip()
+
+    if str.isdigit(ox[0]):
+        nu_ox = int(ox[0])
+    else:
+        nu_ox = 1
+
+    if str.isdigit(red[0]):
+        nu_red = int(red[0])
+    else:
+        nu_red = 1
+
+    return nu_red, nu_ox
