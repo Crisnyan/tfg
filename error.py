@@ -210,6 +210,12 @@ def error(type: str) -> int | float:
             except Exception as e:
                 print("Error:", e)
                 temp = error("SOC")
+        case "k0":
+            try:
+                temp = float(input("Set k0 (m/s):\n"))
+            except Exception as e:
+                print("Error:", e)
+                temp = error("k0")
         case "j0":
             try:
                 temp = float(input("Set j0 (A/m^2):\n"))
@@ -247,6 +253,6 @@ def error(type: str) -> int | float:
                 print("Error:", e)
                 temp = error("E_ref")
         case _:
-            print(f"ERROR, unbound")
+            print(f"ERROR, {type} unbound")
                 
     return temp
