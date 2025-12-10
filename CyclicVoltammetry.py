@@ -5,7 +5,6 @@ import error as e
 import parser
 import matplotlib.pyplot as plt
 
-
 def init_time_potential(E_start: float, E_vertex: float, v: float, dt: float, n_cycles: int) -> tuple[np.ndarray, np.ndarray]:
     E_min = E_start - E_vertex
     E_max = E_start + E_vertex
@@ -106,7 +105,7 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
         Cr1 = Cr_interior[0]
 
         resid_ox = Co0 - Co1 - dx / D_coef * r_surf
-        resid_red = Cr0 - Cr1 + dx / D_coef * r_surf # Signo opuesto para reducción
+        resid_red = Cr0 - Cr1 + dx / D_coef * r_surf # INFO: Signo opuesto para reducción
 
 
         if max(abs(resid_ox), abs(resid_red)) < tol:
@@ -167,12 +166,12 @@ def solve_surface_analytic(Co1, Cr1, E_ap, params):
     k_red = k0 * m.exp(-beta_c * n_el * xi)
     k_ox  = k0 * m.exp(beta_a * n_el * xi)
 
-    # Coeficiente difusivo 'alpha' = D/dx
+    # INFO: Coeficiente difusivo 'alpha' = D/dx
     alpha = D_coef / dx
 
-    # Sistema lineal de 2 ecuaciones:
-    # 1) alpha*(Co1 - Co0) = k_ox*Cr0 - k_red*Co0  => (alpha + k_red)*Co0 - k_ox*Cr0 = alpha*Co1
-    # 2) alpha*(Cr1 - Cr0) = -(k_ox*Cr0 - k_red*Co0) => -k_red*Co0 + (alpha + k_ox)*Cr0 = alpha*Cr1
+    # INFO: Sistema lineal de 2 ecuaciones:
+    # INFO: 1) alpha*(Co1 - Co0) = k_ox*Cr0 - k_red*Co0  => (alpha + k_red)*Co0 - k_ox*Cr0 = alpha*Co1
+    # INFO: 2) alpha*(Cr1 - Cr0) = -(k_ox*Cr0 - k_red*Co0) => -k_red*Co0 + (alpha + k_ox)*Cr0 = alpha*Cr1
     
     A = np.array([
         [alpha + k_red, -k_ox],
@@ -180,42 +179,42 @@ def solve_surface_analytic(Co1, Cr1, E_ap, params):
     ])
     b_vec = np.array([alpha * Co1, alpha * Cr1])
     
-    # Resolver para [Co0, Cr0]
+    # INFO: Resolver para [Co0, Cr0]
     res = np.linalg.solve(A, b_vec)
     return res[0], res[1], k_ox, k_red
 
-def get_derivatives(t, Co_int, Cr_int, E_now, params):
+def get_derivatives(t: float, Co_int: np.ndarray, Cr_int: np.ndarray, E_now: float, params: dict[str, int | float]) -> tuple[np.ndarray, np.ndarray, float]:
     """
     Calcula dC/dt para los nodos internos usando el método de líneas.
     Co_int, Cr_int: Arrays de nodos internos (excluyendo 0 y N)
     E_func_params: tuple (E_start, E_vertex, v, etc) para calcular E al tiempo t
     """
-    # 1. Recuperar Constantes
+    # INFO: 1. Recuperar Constantes
     D = params["D"]
     dx = params["dx"]
-    
-    # 2. Resolver Frontera Superficial (BC)
-    # Necesitamos Co[0] y Cr[0]. Usamos Co[1] que es Co_int[0]
+
+    # INFO: 2. Resolver Frontera Superficial (BC)
+    # INFO: Necesitamos Co[0] y Cr[0]. Usamos Co[1] que es Co_int[0]
     Co0, Cr0, k_ox, k_red = solve_surface_analytic(Co_int[0], Cr_int[0], E_now, params)
-    
-    # 3. Construir vectores completos temporales para calcular laplaciano
-    # BC bulk es constante
+
+    # INFO: 3. Construir vectores completos temporales para calcular laplaciano
+    # INFO: BC bulk es constante
     bulk_Co = params["bulk_Co"]
     bulk_Cr = params["bulk_Cr"]
-    
-    # Concatenar: [Superficie, Internos..., Bulk]
+
+    # INFO: Concatenar: [Superficie, Internos..., Bulk]
     Co_full = np.concatenate(([Co0], Co_int, [bulk_Co]))
     Cr_full = np.concatenate(([Cr0], Cr_int, [bulk_Cr]))
-    
-    # 4. Calcular Laplaciano (Difusión) dC/dt = D * d2C/dx2
-    # Vectorizado: (C[i+1] - 2C[i] + C[i-1]) / dx^2
+
+    # INFO: 4. Calcular Laplaciano (Difusión) dC/dt = D * d2C/dx2
+    # INFO: Vectorizado: (C[i+1] - 2C[i] + C[i-1]) / dx^2
     dCo_dt = D * (Co_full[2:] - 2 * Co_full[1:-1] + Co_full[:-2]) / (dx ** 2)
     dCr_dt = D * (Cr_full[2:] - 2 * Cr_full[1:-1] + Cr_full[:-2]) / (dx ** 2)
-    
-    # Calculamos la corriente actual (flux) para guardarla externamente si fuera necesario,
-    # pero aquí solo devolvemos derivadas de estado.
+
+    # INFO: Calculamos la corriente actual (flux) para guardarla externamente si fuera necesario,
+    # INFO: pero aquí solo devolvemos derivadas de estado.
     r_surf = k_ox * Cr0 - k_red * Co0
-    
+
     return dCo_dt, dCr_dt, r_surf
 
 def CyclicVoltammetry(order: int):
@@ -281,19 +280,17 @@ def CyclicVoltammetry(order: int):
         Cr_int = Cr[1:-1]
 
         for i in range(len(t) - 1):
-            # RK2 (Heun / Punto medio)
+
             k1_Co, k1_Cr, r_surf = get_derivatives(t[i], Co_int, Cr_int, E[i], params)
-            
-            # Estado predictor
+
             Co_pred = Co_int + dt * k1_Co
             Cr_pred = Cr_int + dt * k1_Cr
-            
+
             k2_Co, k2_Cr, _ = get_derivatives(t[i + 1], Co_pred, Cr_pred, E[i + 1], params)
-            
+
             Co_int = Co_int + (dt / 2.0) * (k1_Co + k2_Co)
             Cr_int = Cr_int + (dt / 2.0) * (k1_Cr + k2_Cr)
-            
-            # Guardamos corriente (basada en el estado al inicio del paso o promedio)
+
             j[i] = n_el * F * r_surf
 
     elif order == 4:
@@ -303,21 +300,17 @@ def CyclicVoltammetry(order: int):
         sdt = 0.5 * dt
 
         for i in range(len(t) - 1):
+
             k1_Co, k1_Cr, r_surf = get_derivatives(t[i], Co_int, Cr_int, E[i], params)
-            # k2
             k2_Co, k2_Cr, _ = get_derivatives(t[i] + sdt, Co_int + sdt * k1_Co, Cr_int + sdt * k1_Cr, 0.5 * (E[i] + E[i + 1]), params)
-            # k3
             k3_Co, k3_Cr, _ = get_derivatives(t[i] + sdt, Co_int + sdt * k2_Co, Cr_int + sdt * k2_Cr, 0.5 * (E[i] + E[i + 1]), params)
-            # k4
             k4_Co, k4_Cr, _ = get_derivatives(t[i + 1], Co_int + dt * k3_Co, Cr_int + dt * k3_Cr, E[i + 1], params)
-            # Update
+
             Co_int = Co_int + (dt / 6.0) * (k1_Co + 2 * k2_Co + 2 * k3_Co + k4_Co)
             Cr_int = Cr_int + (dt / 6.0) * (k1_Cr + 2 * k2_Cr + 2 * k3_Cr + k4_Cr)
-            
+
             j[i] = n_el * F * r_surf
 
-    #FIX: animar de forma que a medida que se haga los puntos se escriban
-    #FIX: utilizar RK4 como referencia
         j[-1] = j[-2]
 
     plt.plot(E, j)
