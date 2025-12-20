@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 stdRedPotFile : dict[str, float] = {}
 BatteryValuesFile : dict[float, float] = {}
 
@@ -44,3 +47,14 @@ def getStoichCoeffs(elec: str) -> tuple[int, int]:
         nu_red = 1
 
     return nu_red, nu_ox
+
+def save_plot(x: np.ndarray, y: np.ndarray, x_name: str, y_name: str) -> None:
+    plt.plot(x, y)
+    plt.xlabel(x_name)
+    plt.ylabel(y_name)
+    name = input("Save the plot as:")
+    out = "/tmp/" + name + ".png"
+    plt.savefig(out, dpi=150, bbox_inches='tight')
+    print(f'Saved plot as: {out}')
+    plt.close()
+

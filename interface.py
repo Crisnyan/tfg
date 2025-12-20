@@ -36,7 +36,7 @@ def CyclicVoltammetrySelector() -> None:
         order = selection(2)
         while resp not in (1, 2):
             print("Value not allowed, select a valid number")
-            resp = selection(2)
+            order = selection(2)
     try:
         CyclicVoltammetry(2 * order)
     except Exception as e:

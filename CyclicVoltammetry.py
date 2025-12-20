@@ -4,6 +4,7 @@ import scipy.constants as cnt
 import error as e
 import parser
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
 
 def init_time_potential(E_start: float, E_vertex: float, v: float, dt: float, n_cycles: int) -> tuple[np.ndarray, np.ndarray]:
     E_min = E_start - E_vertex
@@ -135,16 +136,7 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
 
     return u[0], u[1], Co_interior, Cr_interior, r_surf
 
-def build_new(first: float, middle: np.ndarray, last: float) -> np.ndarray:
-        new = np.empty(len(middle) + 2)
-
-        new[0] = first
-        new[1:-1] = middle
-        new[-1] = last
-
-        return new
-
-def solve_surface_analytic(Co1, Cr1, E_ap, params):
+def solve_surface_analytic(Co1: float, Cr1: float, E_ap: float, params: dict[str, int | float]):
     """
     Resuelve analíticamente las concentraciones en superficie (nodo 0)
     basándose en el flujo desde el nodo 1 y las cinéticas Butler-Volmer.
@@ -189,20 +181,13 @@ def get_derivatives(t: float, Co_int: np.ndarray, Cr_int: np.ndarray, E_now: flo
     Co_int, Cr_int: Arrays de nodos internos (excluyendo 0 y N)
     E_func_params: tuple (E_start, E_vertex, v, etc) para calcular E al tiempo t
     """
-    # INFO: 1. Recuperar Constantes
     D = params["D"]
     dx = params["dx"]
-
-    # INFO: 2. Resolver Frontera Superficial (BC)
-    # INFO: Necesitamos Co[0] y Cr[0]. Usamos Co[1] que es Co_int[0]
-    Co0, Cr0, k_ox, k_red = solve_surface_analytic(Co_int[0], Cr_int[0], E_now, params)
-
-    # INFO: 3. Construir vectores completos temporales para calcular laplaciano
-    # INFO: BC bulk es constante
     bulk_Co = params["bulk_Co"]
     bulk_Cr = params["bulk_Cr"]
 
-    # INFO: Concatenar: [Superficie, Internos..., Bulk]
+    Co0, Cr0, k_ox, k_red = solve_surface_analytic(Co_int[0], Cr_int[0], E_now, params)
+
     Co_full = np.concatenate(([Co0], Co_int, [bulk_Co]))
     Cr_full = np.concatenate(([Cr0], Cr_int, [bulk_Cr]))
 
@@ -240,10 +225,15 @@ def CyclicVoltammetry(order: int):
     dx = x_max / nx
     dt = dx ** 2 / (5.0 * D_coef)
     t, E = init_time_potential(E_start, E_vertex, srate, dt, int(n_cycles))
+    x = np.arange(0, nx + 1, 1)
 
     Co = np.full(nx + 1, bulk_Co)
     Cr = np.full(nx + 1, bulk_Cr)
     j = np.empty_like(t)
+
+    Co_anim = np.full((len(t), nx + 1), bulk_Co)
+    Cr_anim = np.full((len(t), nx + 1), bulk_Cr)
+
     lam =  D_coef * dt / (dx ** 2)
 
     params = {
@@ -260,19 +250,24 @@ def CyclicVoltammetry(order: int):
         "bulk_Cr": bulk_Cr
     }
 
+    dt2 = dt / 2
+    dt6 = dt / 6
+
     if (order == 0):
         for i in range(len(t) - 1):
 
             Co0_new, Cr0_new, Co_int, Cr_int, r_surf = newton_thomas(Co, Cr, E[i], lam, params)
 
 
-            newCo = build_new(Co0_new, Co_int, bulk_Co)
-            newCr = build_new(Cr0_new, Cr_int, bulk_Cr)
+            newCo = np.concatenate(([Co0_new], Co_int, [bulk_Co]))
+            newCr = np.concatenate(([Cr0_new], Cr_int, [bulk_Cr]))
 
             Co = newCo
             Cr = newCr
 
             j[i] = n_el * F * r_surf
+            Co_anim[i + 1] = newCo
+            Cr_anim[i + 1] = newCr
 
     elif order == 2:
 
@@ -288,8 +283,13 @@ def CyclicVoltammetry(order: int):
 
             k2_Co, k2_Cr, _ = get_derivatives(t[i + 1], Co_pred, Cr_pred, E[i + 1], params)
 
-            Co_int = Co_int + (dt / 2.0) * (k1_Co + k2_Co)
-            Cr_int = Cr_int + (dt / 2.0) * (k1_Cr + k2_Cr)
+            Co_int = Co_int + dt2 * (k1_Co + k2_Co)
+            Cr_int = Cr_int + dt2 * (k1_Cr + k2_Cr)
+
+            Co0_new, Cr0_new, _, _ = solve_surface_analytic(Co_int[0], Cr_int[0], E[i + 1], params)
+
+            Co_anim[i + 1] = np.concatenate(([Co0_new], Co_int, [bulk_Co]))
+            Cr_anim[i + 1] = np.concatenate(([Cr0_new], Cr_int, [bulk_Cr]))
 
             j[i] = n_el * F * r_surf
 
@@ -297,27 +297,89 @@ def CyclicVoltammetry(order: int):
 
         Co_int = Co[1:-1]
         Cr_int = Cr[1:-1]
-        sdt = 0.5 * dt
 
         for i in range(len(t) - 1):
 
             k1_Co, k1_Cr, r_surf = get_derivatives(t[i], Co_int, Cr_int, E[i], params)
-            k2_Co, k2_Cr, _ = get_derivatives(t[i] + sdt, Co_int + sdt * k1_Co, Cr_int + sdt * k1_Cr, 0.5 * (E[i] + E[i + 1]), params)
-            k3_Co, k3_Cr, _ = get_derivatives(t[i] + sdt, Co_int + sdt * k2_Co, Cr_int + sdt * k2_Cr, 0.5 * (E[i] + E[i + 1]), params)
+            k2_Co, k2_Cr, _ = get_derivatives(t[i] + dt2, Co_int + dt2 * k1_Co, Cr_int + dt2 * k1_Cr, 0.5 * (E[i] + E[i + 1]), params)
+            k3_Co, k3_Cr, _ = get_derivatives(t[i] + dt2, Co_int + dt2 * k2_Co, Cr_int + dt2 * k2_Cr, 0.5 * (E[i] + E[i + 1]), params)
             k4_Co, k4_Cr, _ = get_derivatives(t[i + 1], Co_int + dt * k3_Co, Cr_int + dt * k3_Cr, E[i + 1], params)
 
-            Co_int = Co_int + (dt / 6.0) * (k1_Co + 2 * k2_Co + 2 * k3_Co + k4_Co)
-            Cr_int = Cr_int + (dt / 6.0) * (k1_Cr + 2 * k2_Cr + 2 * k3_Cr + k4_Cr)
+            Co_int = Co_int + dt6 * (k1_Co + 2 * k2_Co + 2 * k3_Co + k4_Co)
+            Cr_int = Cr_int + dt6 * (k1_Cr + 2 * k2_Cr + 2 * k3_Cr + k4_Cr)
+
+            Co0_new, Cr0_new, _, _ = solve_surface_analytic(Co_int[0], Cr_int[0], E[i + 1], params)
+
+            Co_anim[i + 1] = np.concatenate(([Co0_new], Co_int, [bulk_Co]))
+            Cr_anim[i + 1] = np.concatenate(([Cr0_new], Cr_int, [bulk_Cr]))
 
             j[i] = n_el * F * r_surf
 
         j[-1] = j[-2]
+    parser.save_plot(E, j, 'Potential (V)', 'Current density (A/m^2)')
+    #animate_diffusion(x, Co_anim, Cr_anim)
 
-    plt.plot(E, j)
-    plt.xlabel('Potential (V)')
-    plt.ylabel('Current density (A/m^2)')
-    name = input("Save the plot as:")
-    out = "/tmp/" + name + ".png"
-    plt.savefig(out, dpi=150, bbox_inches='tight')
-    print(f'Saved plot as: {out}')
-    plt.close()
+def animate_diffusion(x, Co_anim, Cr_anim):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    
+    max_conc = max(np.max(Co_anim), np.max(Cr_anim)) * 1.1
+    
+    ax1.set_xlabel("distance (m)")
+    ax1.set_ylabel("Conc. Oxidized (mol/m^3)")
+    ax1.set_xlim(0, x[-1])     
+    ax1.set_ylim(0, max_conc)   
+    
+    line1, = ax1.plot([], [], 'b-', lw=2) 
+    
+    ax2.set_xlabel("distance (m)")
+    ax2.set_ylabel("Conc. Reduced (mol/m^3)")
+    ax2.set_xlim(0, x[-1])
+    ax2.set_ylim(0, max_conc)
+    
+    line2, = ax2.plot([], [], 'r-', lw=2)
+
+    time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+
+    def update(frame):
+        
+        line1.set_data(x, Co_anim[frame])
+        
+        line2.set_data(x, Cr_anim[frame])
+        
+        time_text.set_text(f'Time Step: {frame}')
+        
+        return line1, line2, time_text
+
+    ani = anim.FuncAnimation(
+        fig, 
+        update, 
+        frames=len(Co_anim), 
+        interval=20, 
+        blit=True
+    )
+
+    plt.tight_layout()
+    
+    plt.show()
+
+
+
+    #plt.figure()
+    #plt.subplot(1, 2, 1)
+    #plt.plot(x, Co_anim)
+    #plt.xlabel("distance (m)")
+    #plt.ylabel("concentration of the oxidized species (mol/m^3)")
+
+    #plt.subplot(1, 2, 2)
+    #plt.plot(x, Cr_anim)
+    #plt.xlabel("distance (m)")
+    #plt.ylabel("concentration of the reduced species (mol/m^3)")
+
+
+    #name = input("Save the plot as:")
+    #out = "/tmp/" + name + ".png"
+    #plt.savefig(out, dpi=150, bbox_inches='tight')
+    #print(f'Saved plot as: {out}')
+    #plt.close()
+    #parser.save_plot(E, Co_surf, 'Potential (V)', 'Concentration of the oxidized species (mol/m^3)')
+    #parser.save_plot(E, Cr_surf, 'Potential (V)', 'Concentration of the reduced species (mol/m^3)')
