@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.constants as cnt
 import error as e
 import matplotlib.pyplot as plt
 import parser
@@ -9,7 +8,6 @@ def interpOCV(val: float) -> float :
     x1 = 0.0000
     x2 = 0.0000
 
-    # print(f'val: {val}')
     keys = list(parser.BatteryValuesFile.keys())
     if val == keys[-1]:
         return parser.BatteryValuesFile[keys[-1]]
@@ -18,11 +16,9 @@ def interpOCV(val: float) -> float :
         x1 = keys[i - 1]
         x2 = keys[i]
         if x1 <= val <= x2:
-            # print(f'x1: {x1}, x2: {x2}')
             y1 = parser.BatteryValuesFile[x1]
             y2 = parser.BatteryValuesFile[x2]
             t = (y2 - y1) / (x2 - x1)
-            # print(f'x1: {x1}, x2: {x2}, y1: {y1}, y2: {y2}')
             return y1 + t * (val - x1)
     return 0.0
 
@@ -43,7 +39,7 @@ def BatteryDischarge() -> None:
     while State > 0 and t <= endtime:
         V = interpOCV(State) - I * R_int
         voltages.append(V)
-        State = max(0, State + dSOC)
+        State += dSOC
         t += dt
     voltages = np.array(voltages)
     times = np.arange(len(voltages) * dt)

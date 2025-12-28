@@ -45,9 +45,9 @@ def ButlerVolmer() -> None:
     E_ref = e.error("E_ref")
     E_eq, n_el = getEeq(c_red, c_ox, T)
     print(f'E eq: {E_eq}, n,el: {n_el}')
-    nsteps = e.error("n_step")
 
     eta = E_ap - E_eq - E_ref
+    nsteps = 100000 * abs(eta)
     etas = np.linspace(-abs(eta), abs(eta), int(nsteps))
     ja = np.exp(F * n_el * beta_a * etas / (T * R))
     jc = np.exp(F * n_el * -beta_c * etas / (T * R))
@@ -57,10 +57,6 @@ def ButlerVolmer() -> None:
     plt.ylabel('Current density (A/m^2)')
     plt.xlabel('Overpotential (V)')
     resp = input("Select how the y-axis should be: [lin]ear/[log]arithmic\n")
-    while resp != "lin" and resp != "log":
-        resp = input("The y-axis should be: [lin]ear/[log]arithmic\n")
-    if resp == "log":
-        plt.yscale('symlog', linthresh=1e-1)
     name = input("Save the plot as:")
     out = "/tmp/" + name + ".png"
     plt.savefig(out, dpi=150, bbox_inches='tight')

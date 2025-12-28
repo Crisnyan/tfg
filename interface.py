@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 from ButlerVolmer import ButlerVolmer
 from BatteryDischarge import BatteryDischarge
-from LimitIntensity  import LimitIntensity
+from RotatingDiskElectrode  import RotatingDiskElectrode
 from CyclicVoltammetry import CyclicVoltammetry
 import parser
 
@@ -18,10 +19,10 @@ def BatteryDischargeSelector() -> None:
     except Exception as e:
         print("Error:", e)
 
-def LimitIntensitySelector() -> None:
-    print("Limit intensity has been selected")
+def RotatingDiskElectrodeSelector() -> None:
+    print("Rotating Disk Electrode has been selected")
     try:
-        LimitIntensity()
+        RotatingDiskElectrode()
     except Exception as e:
         print("Error:", e)
 
@@ -50,7 +51,7 @@ def selection(mode: int) -> int:
     if mode == 0:
         print("""Select the desired use mode:
               (1) Butler-Volmer
-              (2) Limit intensity
+              (2) Rotating Disk Electrode
               (3) Battery discharge
               (4) Cyclic voltammetry
               (5) Exit""")
@@ -70,7 +71,7 @@ def main() -> None:
         print("Loading", end='')
         parser.stdRedPotFile = parser.parse("standard_potentials.csv")
         print(".", end='')
-        parser.BatteryValuesFile = parser.convert(parser.parse("OCVvsSOC.csv"))
+        parser.BatteryValuesFile = parser.convert(parser.parse("BatteryValues.csv"))
         print(".", end='')
         print(".")
         resp = selection(0)
@@ -81,7 +82,7 @@ def main() -> None:
             case 1:
                 ButlerVolmerSelector()
             case 2:
-                LimitIntensitySelector()
+                RotatingDiskElectrodeSelector()
             case 3:
                 BatteryDischargeSelector()
             case 4:

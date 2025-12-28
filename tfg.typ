@@ -241,7 +241,6 @@ y Runge-Kutta de orden 2 y 4, métodos explícitos.
 #v(2.5cm)
 #weird(16pt, 11pt, "3. I", "NTRODUCTION") 
 
- // WARN: Haciendose 
 == 3.1 Electrochemistry 
 Electrochemistry is the branch of chemistry that focuses on reactions where 
 oxidation and reduction happens. These reactions are commonly called redox 
@@ -448,7 +447,7 @@ Using the Crank-Nicolson for the diffusion equation (Eq.21) produces the followi
 equation:
 $ (u^(n + 1)_i - u^n_i) / (Delta t) = D/2 ((u_(i + 1)^n - 2u_i^n + u_(i - 1)^n) / (Delta x^2) +  
 (u_(i + 1)^(n + 1) - 2u_i^(n + 1) + u_(i - 1)^(n + 1)) / (Delta x^2)) $
-where u is the concentration and at time n and distance i. By defining 
+where u is the concentration and at time $n$ and distance $i$. By defining 
 $r = (D Delta t) / (2 Delta x^2)$, and separating by time step it can 
 be rewritten as:
 $ -r u^(n + 1)_(n + 1) + (1 + 2r) u^(n + 1)_i - r u^(n + 1)_i = 
@@ -468,12 +467,13 @@ and back substitution.
 $ mat(b_1, c_1, , , 0; a_2, b_2, c_2, ; , a_3, b_3, dots.down; 
 , , dots.down, dots.down, c_(n-1); 0, , , a_n, b_n) vec(x_1, x_2, x_3, dots.v, x_n) = 
 vec(d_1, d_2, d_3, dots.v, d_n) $
-The forward sweep consists of eliminating every element of the $a$ diagonal by performing 
-row elimination, using the previous row's $b$ as the pivot. By reducing each row into 
-having one less unknown, the final row ends up with only one unknown, $x_n$ , which can be 
-easily solved algebraically. Now that $x_n$ has a value, the $n-1_"th"$ row can be solved.
-This holds recursively, substituting the newly found value into the previous row until the 
-first row is reached, solving the full vector of unknowns.
+The forward sweep consists of eliminating every element of the $a$ diagonal by 
+performing row elimination, using the previous row's $b$ as the pivot. By reducing 
+each row into having one less unknown, the final row ends up with only one unknown, 
+$x_n$ , which can be easily solved algebraically. Now that $x_n$'s value is known,
+the $n-1_"th"$ row can be solved.This holds recursively, substituting the newly 
+found value into the previous row until the first row is reached, solving the 
+full vector of unknowns.
 
 #pagebreak()
 
@@ -499,8 +499,50 @@ in class and the knowledge aquired through them are the true goal of this work.
 #v(2.5cm)
 #weird(16pt, 11pt, "5. E", "XPERIMENTAL SECTION") 
 
-The structure of t
-
+This TFG's program was made in python 3.13. The main structure of the program is 
+shown by diagram 1:
+#figure(
+image("esquema.png"),
+caption: [High-level structure overview]
+)
+== 5.1 Setup
+A virtual enviroment is used, so generation of a python3 venv is required.
+The generation of the virtual enviroment was done using the following shell 
+command: 
+$"python3 -m venv .venv && source .venv/bin/activate && pip -r requirements.txt" $
+This shell command is actually three commands merged into one by the "and" operator
+$"&&"$. First, an empty virtual enviroment is created, then the "source" command 
+executes the .venv/bin/activate shell script and the context is shifted from the 
+shell enviroment to the venv enviroment. Finally, pip, a python packet manager, 
+installs the required packages listed in the requirements.txt file, which are:
+numpy for efficient arrays, scipy for constants and matplotlib for plotting graphs.
+Once the venv is created and has the required packages installed, the program can 
+be executed by typing python3 interface.py or just ./interface.py.\
+== 5.2 Interface
+The python file interface.py is the entrypoint of the program, which loads and 
+parses the databases into memory and displays the UI by printing text in the 
+terminal. When executed, the program first displays a selection of options ranging 
+from one to five, as shown in Figure 1, where each mode (excluding 5) executes 
+one of the four main functions.\
+#figure(
+image("modes.png"),
+caption: [program modes])
+== 5.3 Helper functions
+Helper functions can be thought of rogue functions, as they do not pertain to 
+any specific section. Parsing functions, as "getElectrons" or "error", used 
+to check if the input value is physically sensible are helper functions.\
+== 5.4 Databases
+Databases store large amounts of data in information. Two databases are used 
+for this project as .csv files (comma separated values), one in StandardPotentials.csv, 
+a database that stores half reactions and their corresponding standard reduction 
+potential in volts, while the other, found in OCVvsSOC.csv relates the SOC of a 
+Li-ion battery to its OCV. These databases are parsed at runtime, when the program 
+starts, and are stored as python dictionaries.
+== 5.5 Main functions
+When selecting a mode, not including exit, the program will shift execution from 
+interface.py to ButlerVolmer.py, RotatingDiskElectrode.py, BatteryDischarge.py 
+or CyclicVoltammetry.py. All these files contain functions which ask for inputs 
+and will plot a graph using the values given as inputs.
 
 #pagebreak()
 
@@ -510,37 +552,224 @@ The structure of t
 #let page_number = page_number + 1
 #set page(header: which_header(page_number))
 #v(2.5cm)
-#weird(16pt, 11pt, "6. B", "UTLER-VOLMER AND RDE") 
+#weird(16pt, 11pt, "6. I", "MPLEMENTATION OF THE CODE")
 
- // FIX: NO HECHO
+== 6.1 ButlerVolmer.py
+The Butler Volmer equation, as described in Eq.10, some assumptions had to be 
+made: First, the system is composed by a three electrodes, a working electrode, 
+a reference electrode and a counter electrode. Second, only one ionic pair 
+contributes to the output intensity and no successive reactions are contemplated. 
+Third, to provide a meaningful graph, the function must be provided a range, 
+which will be given by the overpotential. 
 
+The Butler-Volmer function has the following structure:
+//#figure(
+//image("ButlerVolmer1.png"),
+//caption: [structure overview of ButlerVolmer.py])
+IMAGEN
+
+First, inputs are obtained through the error.py module, which consists of a 
+huge helper function which takes as an input a string and returns either a 
+float or a int. This function's structure consists of a match-case list 
+(other languages might use switch-case instead), where if the input string 
+finds a match, executes a try-catch which checks if the input is valid, and 
+if it's not asks again until a valid input is provided. It should be mentioned 
+that physical constants are not needed to be provided, as are assigned its 
+proper value through the scipy.constants module. The final input, the half 
+reaction, does undergo a special helper function, which checks if the provided 
+half reaction exists in the StandardPotentials database and obtains the 
+associated standard equilibrium potential. The following variables are 
+obtiained as mentioned: temperature, concentration of both the reduced species 
+and oxidized species, $j_0$, the applied potential and the reference electrode 
+potential (using the Standard Hydrogen Electrode as 0V). A function named 
+"getEeq" is called next, using two helper functions, "getElectrons" and 
+"getStoichCoeffs", to calculate the equilibrium potential through the Nerst 
+equation. The overpotential $eta$ is calculated and a numpy ndarray 
+is created through numpy's linspace function, resulting in a ndarray from
+$-abs(eta)$ to $abs(eta)$. Finally, using numpy's exp function, which 
+applies a exponential to each element of an array without any need to loop, 
+$j_a$ and $j_c$ are assigned, and the currents array obtained from $j_0 * (j_a - j_c)$
+is used to plot a $E "vs" i$ graph with the "plotGraph" helper function and saved 
+with whichever name the user wants.
+
+== 6.2 RotatingDiskElectrode.py
+In the same spirit as before, first some assumptions have to be explicited to 
+determine the scope of the function. The function calculates the limiting 
+current through the Levich equation, assuming the system uses a Rotating Disk
+Electrode or RDE to allow a definite diffusion layer $delta$ to exist by providing 
+laminar flow toward the electrode surfave. The reaction must be always diffusion
+controlled, as the electron transfer should not be the limiting factor for the 
+creation of the boundary layer. Finally, the solution uses a Newtonian fluid 
+with constant viscosity. The structure of the function is the following:
+//
+IMAGEN
+//
+Inputs are once again handled by the error helper function, ensuring that 
+each physical parameter is valid before proceeding with the calculation, and
+the following variables are obtained from the user: the number of electrons 
+involved in the redox process, the diffusion coefficient, the bulk concentration, 
+the viscosity of the electrolyte, the electrode area and the maximum rotation 
+speed in RPM. 
+A numpy ndarray for the rotation speed is created using numpy's linspace function, 
+ranging from 100RPM to the input provided. The RPM array is converted into angular 
+velocity $omega$ by the equivalence relation $omega = (2 pi)/60 "RPM"$. Then the
+diffusion layer thickness $delta$ is calculated using Eq.13 and the limiting current 
+$i_"lim"$ is computed for the entire range. Finally, the results are plotted as a
+graph of $i_"lim"$ vs. RPM using the "plotGraph" helper function. 
+
+#pagebreak()
+
+// NOTE: Battery discharge
+
+
+ // WARN: haciendose
+== 6.3 BatteryDischarge.py
+The simulation of a battery discharge process, as formulated in the previous 
+introduction section, relies on continuous tracking of the State of Charge 
+(SOC) and its relation with the Open Circuit Voltage (OCV). The assumptions 
+integrated into this functions are the following: First, the discharge occurs 
+at a constant current $I$, with a low enough value that $R_"int" >> eta$ and 
+the simplyfing Eq.16 to the following equation is possible: 
+$ "SOC(t)" = "SOC"_(t=0) - I(t)/Q_"nom" $
+Second, the internal resistance $R_"int"$ is treated as a constant parameter 
+throughout the discharge process, as only one type of battery is considered, a 
+Li-ion battery. Finally, the relation between the SOC and the OCV is derived 
+from empirical data stored in the database BatteryValues.csv, interpolating 
+linearly between known data points. The structure of the battery discharge 
+simulation is the following:
+
+IMAGEN
+
+Inputs are once again handled by the error helper function. Variables as the 
+current $I$, the internal resistance $R_"int"$, the nominal capacity $Q_"nom"$, 
+initial SOC $"SOC"_(t = 0)$ and finally a time delimiter are obtained through the 
+user's input. 
+An empty python list is created for the output voltages, as unfortunately is 
+impossible to take advantage of Numpy's ndarrays, as the end time is only known 
+when the limiter is set: the dynamic duration of the battery's SOC is the source 
+of the problem. Then, the SOC differential is calculated through the simplified 
+Eq.37 ($d"SOC" = - I(t)/Q_"nom"$) and the if the time limiter is unset (input is 0) 
+then it's set as 9e34 to ensure the battery discharges fully. The main loop of 
+the function starts: for each step, the voltage through Eq.17 is 
+calculated and appended into its corresponding position in the voltages list. 
+The new SOC is set and the time differential is added to the current time, the 
+loop is ready to perform a new iteration. To obtain the OCV atrributed to the 
+current times' SOC, the "interpOCV" function is used. It's a function that takes 
+the current SOC as an input and checks if the exact value exists in the database. 
+If the value does not exist, it returns a value calculated through linear 
+interpolation of the two closest values found in the database. As the condition of 
+the while loop relies only on whether the time has reached or exceeded the delimited 
+time or the SOC is a positive non-zero value, if the next time's SOC is negative no 
+problem arises. Once the while loop loops through its last iteration, a graph is 
+plotted through the "plotGraph" function using the voltages array turned into a 
+Numpy ndarray with the array function and the time array, which is created using 
+Numpy's "arange" with the length of the voltages multiplied by dt as an input.
+After generating a voltage vs. time plot, the user is prompted for a filename, 
+and the resulting graph is saved, providing a visual representation of the battery's 
+discharge curve.
+
+ // WARN: haciendose
+
+== 6.4 CyclicVoltammetry.py
+The simulation of a Cyclic Voltammetry (CV) is the most complex main funcion file in 
+this TFG, as it uses three different numerical solvers for differential equations: 
+Heun, RK4, and Crank-Nicolson. The "CyclicVoltammetry" is the first one that takes an 
+input, the order of the RK method, if 0, Crank-Nicolson is used, if 2 or 4, RK2 (Heun)
+or RK4 is selected instead. It simulates the concentration profiles of the oxidized 
+species ($C_O$) and the reduced species ($C_R$) as the electrode potential sweeps 
+linearly over time. To ensure physical accuracy, the following assumptions are made:
+First, the solution is semi-infinite, meaning that the furthest concentrations do 
+not sense the electrode. Second, the electron transfer follows Butler-Volmer kinetics 
+at the electrode surface, and the spatial grid $x$ is large enough to prevent boundary 
+effects. Third, the solution is homogenous at $t = 0$, having the same concentration 
+at every point of the solution. Fourth and last, the support electrolyte does not 
+interact, and all migration effects are negligible. The CyclicVoltammetry function 
+is structured into several components in this fashion:
+
+IMAGEN
+
+As always, the "error" function is used to check for valid/sensible physical inputs.
+The following variables are obtained from user input: starting potential, vertex 
+potential, the scan rate $v$, number of cycles, the starting bulk concentration 
+for both the oxidized $C_O"(bulk)"$and reduced species, the diffusion coefficient, 
+the reaction's rate constant $k_0$, the cathodic symmetry factor. Through the "getEo"
+helper function, the number of electrons are obtained, along the standard reduction 
+potential of the input half reaction. The following variables are calculated based on 
+the input obtained values: $t_"max"$, $x_"max"$, $d x$ and $d t$. The times array and 
+potential signals array is generated using the "init_time_potential" function. This 
+function creates a triangular potential waveform based on the input starting 
+potential, vertex potential and scan rate ($v$). The function uses a phase shift and 
+the modulo operator to ensure the potential array correctly ranges between the minimum 
+potential $E_"start" - E_"vertex"$ and maximum potential $E_"start" + E_"vertex"$ for
+the input number of cycles by the user. Then the space grid array $x$ is generated through
+Numpy's "arange" function, always of size 301 values, where $x_0$ is the surface of the 
+electrode and $x_301 = x_"max"$. Then the concentration profiles are built through 
+Numpy's "full" function, filling two arrays of the same size than the times array with 
+the input bulk concentrations for each species.
+
+=== 6.4.1 Crank-Nicolson
+Order 0 (Crank-Nicolson): This 
+implementation uses the newton_thomas solver. It applies the implicit 
+Crank-Nicolson method by averaging the current and future three-point formulas, 
+then solves the resulting tridiagonal system using the Thomas algorithm. Because 
+the surface concentrations and the reaction rate are interdependent, it employs 
+a Newton-Raphson iteration to find a self-consistent solution for $C_(o,0)$ and 
+$C_(r,0)$ at each time step.Order 2 (Heun's Method): This version treats the 
+diffusion equation as a system of Ordinary Differential Equations (ODEs) using 
+the Method of Lines. It calculates an initial derivative (slope) and then an 
+average slope over the interval $Delta t$ to update the concentrations, providing 
+better stability than basic Euler.Order 4 (Runge-Kutta 4): This is the highest 
+precision option. It samples the derivatives at four different points within 
+each time step the beginning, two midpoint estimates, and the end to achieve 
+fourth-order accuracy.At the heart of the spatial calculation is the thomas function, 
+which performs a rapid Gaussian elimination on the tridiagonal matrices produced 
+by the discretized diffusion equation. The surface kinetics are solved via the 
+solve_surface_analytic function, which treats the interface as a flux balance 
+between diffusion and Butler-Volmer reaction rates.Finally, the function records 
+the current density ($j$) derived from the Faraday constant and the net reaction 
+rate and stores the concentration profiles for future animation. The results are 
+plotted as a standard $E$ vs. $j$ cyclic voltammogram and saved through the parser 
+module, allowing for a detailed comparison between theoretical models and simulated 
+electrochemical behavior.
+
+=== 6.4.2 Runge-Kutta methods
+Order 2 (Heun's Method): This version treats the 
+diffusion equation as a system of Ordinary Differential Equations (ODEs) using 
+the Method of Lines. It calculates an initial derivative (slope) and then an 
+average slope over the interval $Delta t$ to update the concentrations, providing 
+better stability than basic Euler.Order 4 (Runge-Kutta 4): This is the highest 
+precision option. It samples the derivatives at four different points within 
+each time step the beginning, two midpoint estimates, and the end to achieve 
+fourth-order accuracy.At the heart of the spatial calculation is the thomas function, 
+which performs a rapid Gaussian elimination on the tridiagonal matrices produced 
+by the discretized diffusion equation. The surface kinetics are solved via the 
+solve_surface_analytic function, which treats the interface as a flux balance 
+between diffusion and Butler-Volmer reaction rates.Finally, the function records 
+the current density ($j$) derived from the Faraday constant and the net reaction 
+rate and stores the concentration profiles for future animation. The results are 
+plotted as a standard $E$ vs. $j$ cyclic voltammogram and saved through the parser 
+module, allowing for a detailed comparison between theoretical models and simulated 
+electrochemical behavior.
 
 
 #pagebreak()
 
-// NOTE: Pilas de litio
-
 #let page_number = page_number + 1
 #set page(header: which_header(page_number))
 #v(2.5cm)
-#weird(16pt, 11pt, "7. B", "ATTERY DISCHARGE") 
+#weird(16pt, 11pt, "7. R", "ESULTS AND DISCUSSION") 
 
- // FIX: NO HECHO
-
-
+// FIX: NO HECHO
 
 #pagebreak()
 
-// NOTE: Voltamperometria ciclica
-
 #let page_number = page_number + 1
 #set page(header: which_header(page_number))
 #v(2.5cm)
-#weird(16pt, 11pt, "8. C", "YCLIC VOLTAMMETRY") 
-
- // FIX: NO HECHO
+#weird(16pt, 11pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") 
 
 
+// FIX: NO HECHO
 
 #pagebreak()
 
@@ -602,6 +831,7 @@ The structure of t
 - RK: Runge-Kutta
 - ODE: Ordinary Differential Equation
 - PDE: Partial Differential Equation
+- UI: User Interface
 
  // WARN: Haciendose
 
@@ -620,3 +850,11 @@ The structure of t
                   CV                      X
                Conclusion               X X X
 */
+#set document(title: [Manica_Georigiev_TFG])
+#set math.equation(numbering: "[Eq.1]", number-align: left)
+#let title = "Mathematical techniques and Python programming for solving chemical problems."
+#set page(
+  paper: "a4",
+  margin: (top: 2cm, bottom: 2cm, left: 60pt, right: 2.5cm),
+)
+
