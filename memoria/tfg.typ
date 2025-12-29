@@ -712,43 +712,43 @@ the input bulk concentrations for each species. Next, a python dictionary is cre
 to provide all the needed variables to the functions in a less clutered manner, and 
 finally, through if statements a numerical method is selected based on the order.
 
-When order is 0, the Crank-Nicolson method is selected. This implementation 
-of the Crank-Nicolson method employs a function named "newton_thomas" as a solver, 
-which applies the implicit Crank-Nicolson method by averaging the current and future 
-three-point formulas, as done in Eq. then solves the 
-resulting tridiagonal system using the implemented Thomas algorithm. Because 
-Crank-Nicolson cannot solve non-linear equations and the surface concentrations are 
-non-linear, a Newton-Raphson iteration to find a self-consistent solution (a 
-solution with low enough error) for $C_(o,0)$ and $C_(r,0)$ at each time step is employed.
-At the heart of the spatial calculation is the thomas function, which performs a rapid 
-Gaussian elimination.
+When order is 0, the Crank-Nicolson method is selected. The implementation of the 
+the method employs a function named "newton_thomas" as a solver, which applies 
+the implicit Crank-Nicolson method by averaging the current ($u_t$) and future 
+($u_(t + 1)$ three-point formulas, as done in Eq. . Then solves the resulting 
+tridiagonal system with the implemented Thomas algorithm. Because Crank-Nicolson 
+cannot solve non-linear equations and the surface concentrations are non-linear, 
+a Newton-Raphson iteration to find a self-consistent solution (a solution with 
+low enough error) for $C_(O,0)$ and $C_(R,0)$ at each time step is employed.
 
-If "Order 2" is selected, the program utilizes Heun's Method. This implementation 
-employs the Method of Lines to discretize the spatial Laplacian, effectively 
-transforming the diffusion PDE into a system of coupled Ordinary Differential 
-Equations (ODEs). The algorithm calculates an initial derivative via the 
-"get_derivatives" function and subsequently computes an average slope over the 
-interval $Delta t$ to update concentrations. This approach achieves a temporal 
-precision of $O(Delta t^2)$, offering superior stability and accuracy compared 
-to the basic Euler method.
 
-When "Order 4" is selected, the Runge-Kutta 4 (RK4) algorithm is employed. This 
-is the highest temporal precision option available in the suite, sampling 
-derivatives at four distinct points within each time step: the beginning ($k_1$), 
-two midpoint estimates ($k_2, k_3$), and the end ($k_4$). 
-This sampling achieves a temporal truncation error of $O(Delta t^4)$. It is 
-important to note that for all Runge-Kutta methods, the spatial precision remains 
-$O(Delta x^2)$ due to the second-order central difference approximation used for 
-the diffusion term. 
+When order is 2 is Heun's method (RK2) is selected. The implementation employs the 
+a tecnique called Method of Lines, which discretizes the spacial second 
+derivative of Eq. , effectively transforming the diffusion PDE into a system 
+of coupled (ODEs). To solve the system obtained first, the algorithm calculates 
+an initial derivative using the "get_derivatives" function and then computes an 
+average slope over the interval $Delta t$ to as a slope corrector. This approach 
+achieves a time precision of $O(Delta t^2)$.
 
-Throughout these simulations, surface kinetics are handled by the "solve_surface_analytic" 
-function. This function treats the electrode interface as a rigorous flux balance 
-between the rate of diffusion and Butler-Volmer electron transfer kinetics. Finally, 
-the current density $j$ is calculated from the net reaction rate and the Faraday 
-constant. The results are stored as concentration profiles for future animation 
-and plotted as a standard $E$ vs. $j$ cyclic voltammogram via the parser module, 
-enabling a comprehensive comparison between experimental behavior and theoretical 
-models.
+Finally , when order is 4,the Runge-Kutta 4 (RK4) algorithm is employed. This 
+method has the highest time precision of all the available methods in the file, 
+obtaining derivatives at four distinct points within each time step: at the 
+beginning ($k_1$), two estimates at the midpoint ($k_2, k_3$) and the end ($k_4$). 
+This achieves a temporal truncation error of $O(Delta t^4)$. It is important to 
+note that for all Runge-Kutta methods, the spatial precision remains $O(Delta x^2)$ 
+due to the second-order central difference approximation being used for the diffusion 
+term, which is the same for all methods of the Runge-Kutta family. 
+Throughout the Heun and RK4 simulations, surface kinetics are handled by the 
+"solve_surface_analytic" function. This function treats the electrode surface as  
+a flux balance between the rate of diffusion and the Butler-Volmer electron transfer 
+kinetics. 
+
+Finally, for all the methods, the current density $j$ is calculated as the product
+of the reaction rate and the Faraday constant. The concentration profiles for each
+step are saved for animation purposees and the voltammogram is plotted as a 
+standard $E$ vs. $j$ graph using the "plotGraph" helper function. The concentration 
+profiles are also plotted as $C_O$ vs $x$ and $C_R$ vs $x$, using the profiles at 
+time steps as frames for the animation.
 
 #pagebreak()
 
