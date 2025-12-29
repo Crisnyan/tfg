@@ -165,7 +165,7 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
         Cr1 = Cr_interior[0]
 
         resid_ox = Co0 - Co1 - dx / D_coef * r_surf
-        resid_red = Cr0 - Cr1 + dx / D_coef * r_surf # INFO: Signo opuesto para reducción
+        resid_red = Cr0 - Cr1 + dx / D_coef * r_surf 
 
 
         if max(abs(resid_ox), abs(resid_red)) < tol:

@@ -176,7 +176,7 @@ chemistry.
 #weird(10pt, 8pt, "9.C", "ONCLUSIONS") \
 #weird(10pt, 8pt, "10. R", "ERERENCES AND NOTES") \
 #weird(10pt, 8pt, "11. A", "CRONYMS") \
-#weird(10pt, 8pt, "12. A", "PPENDIX: PROGRAM CODE") \
+#weird(10pt, 8pt, "A", "PPENDIX: PROGRAM CODE") \
 
 
 
@@ -719,9 +719,9 @@ at every point of the solution. Fourth and last, the support electrolyte does no
 interact, and all migration effects are negligible. The CyclicVoltammetry function 
 is structured into several components in this fashion:
 
-// #figure(
-//  image("CyclicVoltammetryStructure.png"),
-//  caption: [structure overview of CyclicVoltammetry.py])
+ #figure(
+  image("CyclicVoltammetryStructure.png"),
+  caption: [structure overview of CyclicVoltammetry.py])
 
 As before, he "error" function is used to check for valid/sensible physical inputs.
 The following variables are obtained from user input: starting potential, vertex 
@@ -789,7 +789,11 @@ time steps as frames for the animation.
 #v(2.5cm)
 #weird(16pt, 11pt, "7. R", "ESULTS AND DISCUSSION") 
 
-// FIX: NO HECHO
+To prove the program works and the simulations are legitimate, the graphical output 
+from the simulations must be compared with experimental sources. 
+
+== 7.1 Butler Volmer
+The Butler volme output graph must imitate closely the 
 
 #pagebreak()
 
@@ -800,19 +804,18 @@ time steps as frames for the animation.
 
 The current program can be improved and optimized further, however, as the program 
 was made for a pedagological point some limits were assumed. This section will 
-cover further improvements for the overall structure and performance of the program.
-
+cover further improvements for the overall structure and performance of the program.\
 First, the UI is very minimal, only a few lines of text printed to the terminal. 
 The UI could be improved greatly by using tools like Streamlit or Custom Tkinter.
 Streamlit could be used to turn the program into a web app, providing it of a simple 
 yet elegant interface, while Custom Tkinter would make of the program an application, 
-with its own window and a personalized interface, tailored to the code written.
+with its own window and a personalized interface, tailored to the code written.\
 To make the code more readable, Object Oriented Programming (OOP), along classes and 
 methods could make the code modular and more readable, in case other programmers 
 join the codebase. Other external modules would too make the code more compact, as 
 other than pedagologically, no real need to write the numerical algorithms existed. 
 Using already existing functions from well known modules will make the code clearer 
-and possibly faster, as several optimizations can be done for the solvers. Another 
+and possibly faster, as several optimizations can be done for the solvers. \ Another 
 drawback is the way inputs are provided to the program. Thanks to the "error" function 
 which handles bad inputs the program won't crash, but for batches of simulations, 
 manually inputing each parameter every time a simulation is needed might be a cause of 
@@ -820,8 +823,7 @@ unnecessary burden for the user. Taking as input a .json file or a .yaml would b
 gret improvement over the current input system. Although less intuitive for new users, 
 the easy reproductibility and the possibility of providing multiple inputs would allow 
 for easy parallelization and for supercomputers to not wait idle waiting while another 
-input is being sent.
-
+input is being sent.\
 On the topic of parallelization, python 3.14 removes the Global Interpreter Lock (GIL)
 allowing for true multithreading in Python 3. This update allows for the python
 interpreter not to be locked into only being used by one thread. By rewritting the 
@@ -829,7 +831,7 @@ program for Python 3.14, and importing the new multithreading module, making cor
 use of threading, an exponential performance improvement on current code would be 
 observed. Without any version change, the program can be made concurrent by Inter 
 Process Comunication (IPC), creating new processes and comunicating them. Although 
-more expensive than multithreading, can be achieved without any version change.
+more expensive than multithreading, can be achieved without any version change. \
 Python's interpreter is a massive slowdown compared to compiled languages, rewritting 
 the project in other programming languages which are compiled, like C, C++, or new 
 programming languages like Zig or Rust would benefit from compiler optimizations, 
@@ -842,7 +844,7 @@ way all is contained in a the cache will turn the program into a very performant
 simulator. Avoiding cache flushes can lessen the runtime by orders of magnitude, 
 especially if memory is stored in L1 cache or L2 instead. Albeit buying CPUs with 
 megabytes of cache can improve cache hits, optimizing the code will be the principal 
-manner to achieve true performance. Finally, vectorization through Single Instruction, 
+manner to achieve true performance. \ Finally, vectorization through Single Instruction, 
 Multiple Data (SIMD) coupled with branchless programming will take the code to another 
 level of performance, as no branch predictions will be needed for the CPUs and SIMD 
 instructions perform multiple operations in one CPU cycle. 
@@ -869,9 +871,12 @@ using advanced numerical methods, as seen in the sections before.
 #v(2.5cm)
 #weird(16pt, 11pt, "10. R", "ERENCES AND NOTES") 
 
- // FIX: NO HECHO
-
-
+1. Bard, A. J., & Faulkner, L. R. (2001). Electrochemical Methods: Fundamentals and Applications. John Wiley & Sons.\
+2. Atkins, P., & de Paula, J. (2014). Physical chemistry (10th ed.). Oxford University Press.
+3. Rumble, J. R. (Ed.). (2021). CRC handbook of chemistry and physics (102nd ed.). CRC Press.
+4. Zhang, S., Zhang, Y., Liu, Y., & Zhang, J. (2022). SOC estimation of lithium-ion battery based on an improved equivalent circuit model and an improved adaptive unscented Kalman filter. Energies, 15(23), 9142. https://doi.org/10.3390/en15239142
+5. Press, W. H., Teukolsky, S. A., Vetterling, W. T., & Flannery, B. P. (2007). Numerical recipes: The art of scientific computing (3.ª ed.). Cambridge University Press.
+6. Elgrishi, N., Rountree, K. J., McCarthy, B. D., Rountree, E. S., Eisenhart, T. T., y Dempsey, J. L. (2018). A Practical Beginner’s Guide to Cyclic Voltammetry. Journal of Chemical Education, 95(2), 197–206 . https://doi.org/10.1021/acs.jchemed.7b00361.
 
 #pagebreak()
 
@@ -908,14 +913,58 @@ using advanced numerical methods, as seen in the sections before.
 - ODE: Ordinary Differential Equation
 - PDE: Partial Differential Equation
 - UI: User Interface
-
- // WARN: Haciendose
+- LHS: Left Hand Side
+- RHS: Right Hand Side
+- parse: analyse text data and transform it to manageable data 
 
 #pagebreak()
 
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
 #align(center)[#h(5cm)#set text(fill: black.lighten(35%))
 #weird(36pt, 26pt, "A", "PPENDICES")]
 
+#pagebreak()
+
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#weird(16pt, 11pt, "P", "ROGRAM CODE")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("interface.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("utils.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("error1.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("error2.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("error3.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("ButlerVolmer.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("RotatingDiskElectrode.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("BatteryDischarge.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("CyclicVoltammetry1.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("CyclicVoltammetry2.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("CyclicVoltammetry3.png")
+#let page_number = page_number + 1
+#set page(header: which_header(page_number))
+#image("CyclicVoltammetry4.png")
 
 
 /* INFO:        NOMBRE           |       HECHO
@@ -923,10 +972,10 @@ using advanced numerical methods, as seen in the sections before.
                   SDG                     V
                 Summary                   V
                  Resum                    V
-              Introduccion         V V V V V X X X 
+              Introduccion         V V V V V V V V 
               Estructura                  V
                Ex 1 y 2                  V V
                  Pilas                    V
-                  CV                      ~
-               Conclusion               V X X
+                  CV                      V
+               Conclusion               V X v
 */
