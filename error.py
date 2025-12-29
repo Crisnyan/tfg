@@ -1,3 +1,5 @@
+# INFO: Handles errors and ensures physically sense inputs. The input decides 
+#       which case should it go into.
 def error(type: str) -> int | float:
     temp = 0
     match type:

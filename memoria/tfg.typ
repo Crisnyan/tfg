@@ -145,6 +145,38 @@ chemistry.
 #v(2.5cm)
 #weird(16pt, 11pt, "C", "ONTENTS")
 
+#weird(10pt, 8pt, "1. S", "UMMARY") \
+#weird(10pt, 8pt, "2. R", "ESUMEN") \
+#weird(10pt, 8pt, "3. I", "NTRODUCTION") \
+#h(1.5em)3.1. Electrochemistry \
+#h(3em)3.1.1. The butler-volmer's equation \
+#h(3em)3.1.2. Levich and rotating disk electrode \
+#h(3em)3.1.3. Battery discharge equation \
+#h(3em)3.1.4. Cyclic voltammetry \
+#h(1.5em)3.2. Numerical methods for differential equations \
+#h(3em)3.2.1. Euler's method \
+#h(3em)3.2.2. Heun's method \
+#h(3em)3.2.3. Runge-kutta 4 \
+#h(3em)3.2.4. Crank-nicolson \
+#h(3em)3.2.5. Thomas algorithm \
+#weird(10pt, 8pt, "4. O", "BJECTIVES") \
+#weird(10pt, 8pt, "5. E", "XPERIMENTAL SECTION") \
+#h(1.5em)5.1. Setup \
+#h(1.5em)5.2. Interface \
+#h(1.5em)5.3. Helper functions \
+#h(1.5em)5.4. Databases \
+#h(1.5em)5.5. Main functions \
+#weird(10pt, 8pt, "6. I", "MPLEMENTATION OF THE CODE") \
+#h(1.5em)6.1. ButlerVolmer.py \
+#h(1.5em)6.2. RotatingDiskElectrode.py \
+#h(1.5em)6.3. BatteryDischarge.py \
+#h(1.5em)6.4. CyclicVoltammetry.py \
+#weird(10pt, 8pt, "7. R", "ESULTS AND DISCUSSION") \
+#weird(10pt, 8pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") \
+#weird(10pt, 8pt, "9.C", "ONCLUSIONS") \
+#weird(10pt, 8pt, "10. R", "ERERENCES AND NOTES") \
+#weird(10pt, 8pt, "11. A", "CRONYMS") \
+#weird(10pt, 8pt, "12. A", "PPENDIX: PROGRAM CODE") \
 
 
 
@@ -534,7 +566,7 @@ to check if the input value is physically sensible are helper functions.\
 Databases store large amounts of data in information. Two databases are used 
 for this project as .csv files (comma separated values), one in StandardPotentials.csv, 
 a database that stores half reactions and their corresponding standard reduction 
-potential in volts, while the other, found in OCVvsSOC.csv relates the SOC of a 
+potential in volts, while the other, found in BatteryValues.csv relates the SOC of a 
 Li-ion battery to its OCV. These databases are parsed at runtime, when the program 
 starts, and are stored as python dictionaries.
 == 5.5 Main functions

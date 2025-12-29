@@ -1,52 +1,11 @@
 #!/usr/bin/env python3
 from ButlerVolmer import ButlerVolmer
-from BatteryDischarge import BatteryDischarge
 from RotatingDiskElectrode  import RotatingDiskElectrode
+from BatteryDischarge import BatteryDischarge
 from CyclicVoltammetry import CyclicVoltammetry
-import parser
+import utils
 
-def ButlerVolmerSelector() -> None:
-    print("Butler-Volmer has been selected")
-    try:
-        ButlerVolmer()
-    except Exception as e:
-        print("Error:", e)
-
-def BatteryDischargeSelector() -> None:
-    print("Battery discharge has been selected")
-    try:
-       BatteryDischarge()
-    except Exception as e:
-        print("Error:", e)
-
-def RotatingDiskElectrodeSelector() -> None:
-    print("Rotating Disk Electrode has been selected")
-    try:
-        RotatingDiskElectrode()
-    except Exception as e:
-        print("Error:", e)
-
-def CyclicVoltammetrySelector() -> None:
-    print("Cyclic voltamperometry has been selected")
-    resp = selection(1)
-    while resp not in (1, 2):
-        print("Value not allowed, select a valid number")
-        resp = selection(1)
-    order = 0
-    if resp == 2:
-        order = selection(2)
-        while resp not in (1, 2):
-            print("Value not allowed, select a valid number")
-            order = selection(2)
-    try:
-        CyclicVoltammetry(2 * order)
-    except Exception as e:
-        print("Error:", e)
-
-def alg_selection() -> int:
-    resp = int(input())
-    return resp
-
+# INFO: Prints the mode selections for the simulations and Runge-Kutta methods.
 def selection(mode: int) -> int:
     if mode == 0:
         print("""Select the desired use mode:
@@ -66,13 +25,14 @@ def selection(mode: int) -> int:
     resp = int(input())
     return resp
 
+# INFO: Loads the databses and selects which simulation the user desires, handling 
+#       parsing errors.
 def main() -> None:
     try:
-        print("Loading", end='')
-        parser.stdRedPotFile = parser.parse("standard_potentials.csv")
+        print("Loading.", end='')
+        utils.stdRedPotFile = utils.parse("standard_potentials.csv")
         print(".", end='')
-        parser.BatteryValuesFile = parser.convert(parser.parse("BatteryValues.csv"))
-        print(".", end='')
+        utils.BatteryValuesFile = utils.convert(utils.parse("BatteryValues.csv"))
         print(".")
         resp = selection(0)
         while resp not in (1, 2, 3, 4, 5):
@@ -80,13 +40,39 @@ def main() -> None:
             resp = selection(0)
         match resp:
             case 1:
-                ButlerVolmerSelector()
+                print("Butler-Volmer has been selected")
+                try:
+                    ButlerVolmer()
+                except Exception as e:
+                    print("Error:", e)
             case 2:
-                RotatingDiskElectrodeSelector()
+                print("Rotating Disk Electrode has been selected")
+                try:
+                    RotatingDiskElectrode()
+                except Exception as e:
+                    print("Error:", e)
             case 3:
-                BatteryDischargeSelector()
+                print("Battery discharge has been selected")
+                try:
+                   BatteryDischarge()
+                except Exception as e:
+                    print("Error:", e)
             case 4:
-                CyclicVoltammetrySelector()
+                print("Cyclic voltamperometry has been selected")
+                resp = selection(1)
+                while resp not in (1, 2):
+                    print("Value not allowed, select a valid number")
+                    resp = selection(1)
+                order = 0
+                if resp == 2:
+                    order = selection(2)
+                    while resp not in (1, 2):
+                        print("Value not allowed, select a valid number")
+                        order = selection(2)
+                try:
+                    CyclicVoltammetry(2 * order)
+                except Exception as e:
+                    print("Error:", e)
             case 5:
                 exit()
     except Exception as e:

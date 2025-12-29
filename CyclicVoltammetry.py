@@ -2,10 +2,55 @@ import numpy as np
 import math as m
 import scipy.constants as cnt
 import error as e
-import parser
+import utils
 import matplotlib.pyplot as plt
-import matplotlib.animation as anim
+from matplotlib.animation import FuncAnimation
 
+# INFO: Creates and saves a GIF of concentration profiles vs time and a voltammogram 
+#       using Pillow. The name of the GIF is handled as user input.
+def animate_cv(t: np.ndarray, x: np.ndarray, Co_hist: np.ndarray, Cr_hist: np.ndarray, potentials: np.ndarray, currents: np.ndarray):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    
+    ax1.set_xlim(0, np.max(x))
+    ax1.set_ylim(0, np.max(Co_hist) * 1.1)
+    ax1.set_xlabel('Distance from electrode (UA)')
+    ax1.set_ylabel('Concentration (mol/m^2)')
+    line_o, = ax1.plot([], [], color='blue', label='[Ox]')
+    line_r, = ax1.plot([], [], color='red', label='[Red]')
+    ax1.legend(loc='upper right')
+
+    ax2.set_xlim(np.min(potentials), np.max(potentials))
+    ax2.set_ylim(np.min(currents) * 1.1, np.max(currents) * 1.1)
+    ax2.set_xlabel('Potential (V)')
+    ax2.set_ylabel('Current density  (A/m^2)')
+    line_j, = ax2.plot([], [], color='black', lw=1.5)
+    point_j, = ax2.plot([], [], 'ko')
+
+    plt.tight_layout()
+
+    num_frames = int(10 * t[-1])
+    step = max(1, len(potentials) // num_frames)
+    frames = range(0, len(potentials), step)
+
+    def update(i):
+        line_o.set_data(x, Co_hist[i])
+        line_r.set_data(x, Cr_hist[i])
+
+        line_j.set_data(potentials[:i], currents[:i])
+        point_j.set_data([potentials[i]], [currents[i]])
+
+        return line_o, line_r, line_j, point_j
+
+    ani = FuncAnimation(fig, update, frames=frames, blit=True, interval=50)
+
+    name = input("Save the plot as:")
+    out = "/tmp/" + name + ".gif"
+    ani.save(out, writer='pillow', fps=20)
+    print(f"Saved CV analysis as: {out}")
+    plt.close()
+
+# INFO: Creates two numpy ndarrays, both the time array and the potential triangular 
+#       waveform array. Returns the arrays before mentioned.
 def init_time_potential(E_start: float, E_vertex: float, v: float, dt: float, n_cycles: int) -> tuple[np.ndarray, np.ndarray]:
     E_min = E_start - E_vertex
     E_max = E_start + E_vertex
@@ -21,16 +66,22 @@ def init_time_potential(E_start: float, E_vertex: float, v: float, dt: float, n_
 
     return t, E
 
+# INFO: Parses the user input and obtains the standard equilibrium potential via 
+#       the standard reduction potential database. Returns the number of electrons
+#       of the reaction and the standard reduction potential of the input half reaction.
 def getVal() -> tuple[int, float] :
 
     value = None
     n_el = 0
     while value == None:
         resp = input("Input the half reaction corresponding to the oxidation:\n")
-        value = parser.stdRedPotFile.get(resp)
-        n_el = parser.getElectrons(resp)
+        value = utils.stdRedPotFile.get(resp)
+        n_el = utils.getElectrons(resp)
     return n_el, value
 
+# INFO: Implemention of the Thomas algorithm, a, b and c are the three diagonals of 
+#       the triadiagonal matrix, d is the solution vector and x is the vector of 
+#       unknowns. Returns x solved.
 def thomas(a_temp, b_temp, c_temp, d_temp):
     n = len(d_temp)
 
@@ -47,12 +98,17 @@ def thomas(a_temp, b_temp, c_temp, d_temp):
         x[i] = (d[i] - c[i] * x[i+1]) / b[i]
     return x
 
+
+# INFO: Calculates the vector of solutions for the Thomas algorithm. Returns the 
+#       calculated vector.
 def rhs(conc: np.ndarray, c0: float, bulk: float, lam: float) -> np.ndarray:
     res = 0.5 * lam * conc[0:-2] + (1.0 - lam) * conc[1:-1] + 0.5 * lam * conc[2:]
     res[0] += 0.5 * lam * c0
     res[-1] += 0.5 * lam * bulk
     return res
 
+# INFO: Calculates the reaction rate and the partial derivatives for the surface 
+#       concentrations and returns them. 
 def reaction_rate_and_partials(Co0: float, Cr0: float, E_ap: float, params: dict[str, int | float]):
 
     R = params["R"]
@@ -77,7 +133,10 @@ def reaction_rate_and_partials(Co0: float, Cr0: float, E_ap: float, params: dict
 
     return r, dr_dCo0, dr_dCr0
 
-def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, params: dict[str, int | float]):
+# INFO: Solves the differential equations using the Thomas algorithm for the 
+#       interior concentrations and Newton-Raphson for the surface concentrations.
+#       Returns the solved concentrations and the reaction rate.
+def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, params: dict[str, int | float]) -> tuple[float, float, np.ndarray, np.ndarray, float]  :
     tol=1e-9
     max_iter=12
 
@@ -136,12 +195,10 @@ def newton_thomas(Co: np.ndarray, Cr: np.ndarray, E_ap: float, lam: float, param
 
     return u[0], u[1], Co_interior, Cr_interior, r_surf
 
-def solve_surface_analytic(Co1: float, Cr1: float, E_ap: float, params: dict[str, int | float]):
-    """
-    Resuelve analíticamente las concentraciones en superficie (nodo 0)
-    basándose en el flujo desde el nodo 1 y las cinéticas Butler-Volmer.
-    Sistema: D(C1 - C0)/dx = Rate
-    """
+# INFO: Analitically solves the concentrations in the surface of the electrode for 
+#       the Runge-Kutta methods. Returns the solved surface concentrations along 
+#       with the reduction and oxidation rate constants.
+def solve_surface_analytic(Co1: float, Cr1: float, E_ap: float, params: dict[str, int | float]) -> tuple[float, float, float, float]:
     R = params["R"]
     T = params["T"]
     F = params["F"]
@@ -158,29 +215,22 @@ def solve_surface_analytic(Co1: float, Cr1: float, E_ap: float, params: dict[str
     k_red = k0 * m.exp(-beta_c * n_el * xi)
     k_ox  = k0 * m.exp(beta_a * n_el * xi)
 
-    # INFO: Coeficiente difusivo 'alpha' = D/dx
     alpha = D_coef / dx
 
-    # INFO: Sistema lineal de 2 ecuaciones:
-    # INFO: 1) alpha*(Co1 - Co0) = k_ox*Cr0 - k_red*Co0  => (alpha + k_red)*Co0 - k_ox*Cr0 = alpha*Co1
-    # INFO: 2) alpha*(Cr1 - Cr0) = -(k_ox*Cr0 - k_red*Co0) => -k_red*Co0 + (alpha + k_ox)*Cr0 = alpha*Cr1
-    
     A = np.array([
         [alpha + k_red, -k_ox],
         [-k_red, alpha + k_ox]
     ])
     b_vec = np.array([alpha * Co1, alpha * Cr1])
     
-    # INFO: Resolver para [Co0, Cr0]
     res = np.linalg.solve(A, b_vec)
     return res[0], res[1], k_ox, k_red
 
+# INFO: Calculates the derivative of the interior concentrations with respect to 
+#       time by discretizing the spatial dimension, into a coupled system of 
+#       differential equations. Returns the derivatives of the system and the 
+#       reaction rate at the surface of the electrode.
 def get_derivatives(t: float, Co_int: np.ndarray, Cr_int: np.ndarray, E_now: float, params: dict[str, int | float]) -> tuple[np.ndarray, np.ndarray, float]:
-    """
-    Calcula dC/dt para los nodos internos usando el método de líneas.
-    Co_int, Cr_int: Arrays de nodos internos (excluyendo 0 y N)
-    E_func_params: tuple (E_start, E_vertex, v, etc) para calcular E al tiempo t
-    """
     D = params["D"]
     dx = params["dx"]
     bulk_Co = params["bulk_Co"]
@@ -191,17 +241,17 @@ def get_derivatives(t: float, Co_int: np.ndarray, Cr_int: np.ndarray, E_now: flo
     Co_full = np.concatenate(([Co0], Co_int, [bulk_Co]))
     Cr_full = np.concatenate(([Cr0], Cr_int, [bulk_Cr]))
 
-    # INFO: 4. Calcular Laplaciano (Difusión) dC/dt = D * d2C/dx2
-    # INFO: Vectorizado: (C[i+1] - 2C[i] + C[i-1]) / dx^2
     dCo_dt = D * (Co_full[2:] - 2 * Co_full[1:-1] + Co_full[:-2]) / (dx ** 2)
     dCr_dt = D * (Cr_full[2:] - 2 * Cr_full[1:-1] + Cr_full[:-2]) / (dx ** 2)
 
-    # INFO: Calculamos la corriente actual (flux) para guardarla externamente si fuera necesario,
-    # INFO: pero aquí solo devolvemos derivadas de estado.
     r_surf = k_ox * Cr0 - k_red * Co0
 
     return dCo_dt, dCr_dt, r_surf
-
+# INFO: Selects from three numerical methods based on the order and stores the 
+#       solutions obtained for the current density. Also stores the concentration 
+#       profiles at each time step for the resulting animated graph, containing 
+#       both a voltammogram and the animated concentration vs distance from the 
+#       electrode at each time step.
 def CyclicVoltammetry(order: int):
     F = cnt.value("Faraday constant")
     R = cnt.gas_constant
@@ -247,7 +297,8 @@ def CyclicVoltammetry(order: int):
         "D": D_coef,
         "E_std": E_std,
         "bulk_Co": bulk_Co,
-        "bulk_Cr": bulk_Cr
+        "bulk_Cr": bulk_Cr,
+        "x_max": x_max
     }
 
     dt2 = dt / 2
@@ -316,70 +367,5 @@ def CyclicVoltammetry(order: int):
             j[i] = n_el * F * r_surf
 
         j[-1] = j[-2]
-    parser.save_plot(E, j, 'Potential (V)', 'Current density (A/m^2)')
-    #animate_diffusion(x, Co_anim, Cr_anim)
 
-def animate_diffusion(x, Co_anim, Cr_anim):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
-    
-    max_conc = max(np.max(Co_anim), np.max(Cr_anim)) * 1.1
-    
-    ax1.set_xlabel("distance (m)")
-    ax1.set_ylabel("Conc. Oxidized (mol/m^3)")
-    ax1.set_xlim(0, x[-1])     
-    ax1.set_ylim(0, max_conc)   
-    
-    line1, = ax1.plot([], [], 'b-', lw=2) 
-    
-    ax2.set_xlabel("distance (m)")
-    ax2.set_ylabel("Conc. Reduced (mol/m^3)")
-    ax2.set_xlim(0, x[-1])
-    ax2.set_ylim(0, max_conc)
-    
-    line2, = ax2.plot([], [], 'r-', lw=2)
-
-    time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
-
-    def update(frame):
-        
-        line1.set_data(x, Co_anim[frame])
-        
-        line2.set_data(x, Cr_anim[frame])
-        
-        time_text.set_text(f'Time Step: {frame}')
-        
-        return line1, line2, time_text
-
-    ani = anim.FuncAnimation(
-        fig, 
-        update, 
-        frames=len(Co_anim), 
-        interval=20, 
-        blit=True
-    )
-
-    plt.tight_layout()
-    
-    plt.show()
-
-
-
-    #plt.figure()
-    #plt.subplot(1, 2, 1)
-    #plt.plot(x, Co_anim)
-    #plt.xlabel("distance (m)")
-    #plt.ylabel("concentration of the oxidized species (mol/m^3)")
-
-    #plt.subplot(1, 2, 2)
-    #plt.plot(x, Cr_anim)
-    #plt.xlabel("distance (m)")
-    #plt.ylabel("concentration of the reduced species (mol/m^3)")
-
-
-    #name = input("Save the plot as:")
-    #out = "/tmp/" + name + ".png"
-    #plt.savefig(out, dpi=150, bbox_inches='tight')
-    #print(f'Saved plot as: {out}')
-    #plt.close()
-    #parser.save_plot(E, Co_surf, 'Potential (V)', 'Concentration of the oxidized species (mol/m^3)')
-    #parser.save_plot(E, Cr_surf, 'Potential (V)', 'Concentration of the reduced species (mol/m^3)')
+    animate_cv(t, x, Co_anim, Cr_anim, E, j)
