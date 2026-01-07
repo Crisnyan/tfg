@@ -1,10 +1,22 @@
 #set document(title: [Manica_Georigiev_TFG])
 #set math.equation(numbering: "[Eq.1]", number-align: left)
 #let title = "Mathematical techniques and Python programming for solving chemical problems."
-#set page(
-  paper: "a4",
-  margin: (top: 2cm, bottom: 2cm, left: 60pt, right: 2.5cm),
+#let page-info = (
+  "0" : "Manica Georgiev, Cristian Angelo",
+  "1" : [#title]
 )
+
+#let which_header(n) = {
+  if calc.odd(n) {
+    [#emph[#text(size: 7pt, stretch: 70%)[#title] #n] #v(-0.5em)]
+    v(-0.4em)
+    line(length: 100%, stroke: 0.5pt + gray.darken(50%))
+  } else {
+    [#emph[#n #text(size: 7pt, stretch: 70%)[Manica Georgiev, Cristian Angelo]] #v(-0.3em)]
+    v(-0.4em)
+    line(length: 100%, stroke: 0.5pt + gray.darken(50%))
+  }
+}
 
 #set text(
   font: "Arial",
@@ -13,6 +25,25 @@
 )
 #set par(
   justify: true
+)
+
+#set page(
+  paper: "a4",
+  margin: (top: 2cm, bottom: 2cm, left: 60pt, right: 2.5cm),
+  header: context {
+    let current-page = here().page() - 4
+    if current-page > 0 { 
+      let label = page-info.at(str(calc.rem(current-page, 2)))
+      if calc.odd(current-page) {
+    [#emph[#text(size: 9pt, stretch: 70%)[#label #current-page]] #v(-0.5em)]
+    }
+    else {
+    [#emph[#text(size: 9pt, stretch: 70%)[#current-page #label]] #v(-0.5em)]
+    }
+
+    line(length: 100%, stroke: 0.5pt + gray.darken(50%))
+    }
+  } 
 )
 
 #let weird(big, small, t_big, t_small) = {
@@ -28,7 +59,7 @@
   #v(-0.5em)
   #align(right)[Dr. Miguel Gonzalez Perez]
   #v(-0.5em)
-  #align(right)[#text(style: "italic", size: 9pt)[Departament de Química Xxxxx]]
+  #align(right)[#text(style: "italic", size: 9pt)[Departament de Química Física]]
   #v(0.2em)
 ]
 
@@ -125,29 +156,14 @@ chemistry.
 #pagebreak()
 
 // NOTE: Contents
-
-#let page_number = 1
-
-#let which_header(n) = {
-  if calc.odd(n) {
-    [#emph[#text(size: 7pt, stretch: 70%)[#title] #n] #v(-0.5em)]
-    v(-0.4em)
-    line(length: 100%, stroke: 0.5pt + gray.darken(50%))
-  } else {
-    [#emph[#n #text(size: 7pt, stretch: 70%)[Manica Georgiev, Cristian Angelo]] #v(-0.3em)]
-    v(-0.4em)
-    line(length: 100%, stroke: 0.5pt + gray.darken(50%))
-  }
-}
-
-#set page(header: which_header(page_number))
-#set text(stretch: 100%)
-#v(2.5cm)
-#weird(16pt, 11pt, "C", "ONTENTS")
-
-#weird(10pt, 8pt, "1. S", "UMMARY") \
-#weird(10pt, 8pt, "2. R", "ESUMEN") \
-#weird(10pt, 8pt, "3. I", "NTRODUCTION") \
+#grid(
+  columns: (1fr, 1fr),
+  gutter: 10pt,
+[#v(2.5cm) #weird(16pt, 11pt, "C", "ONTENTS") \
+ \
+#weird(10pt, 8pt, "1. S", "UMMARY") \ 
+#weird(10pt, 8pt, "2. R", "ESUMEN") \ 
+#weird(10pt, 8pt, "3. I", "NTRODUCTION") \ 
 #h(1.5em)3.1. Electrochemistry \
 #h(3em)3.1.1. The butler-volmer's equation \
 #h(3em)3.1.2. Levich and rotating disk electrode \
@@ -172,28 +188,29 @@ chemistry.
 #h(1.5em)6.3. BatteryDischarge.py \
 #h(1.5em)6.4. CyclicVoltammetry.py \
 #weird(10pt, 8pt, "7. R", "ESULTS AND DISCUSSION") \
+#h(1.5em)7.1. ButlerVolmer \
+#h(1.5em)7.2. RotatingDiskElectrode \
+#h(1.5em)7.3. BatteryDischarge \
+#h(1.5em)7.4. CyclicVoltammetry \
 #weird(10pt, 8pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") \
 #weird(10pt, 8pt, "9.C", "ONCLUSIONS") \
 #weird(10pt, 8pt, "10. R", "ERERENCES AND NOTES") \
 #weird(10pt, 8pt, "11. A", "CRONYMS") \
-#weird(10pt, 8pt, "A", "PPENDIX: PROGRAM CODE") \
-
-
-
+#weird(10pt, 8pt, "A", "PPENDIX: PROGRAM CODE")],
+align(right)[#v(3.7cm) *3 \ 4 \ 5* \ 5 \ 5 \ 6 \ 6 \ 7 \ 7 \ 7 \ 8 \ 
+8 \ 8 \ 9 \ *10 \ 11* \ 11 \ 11 \ 11 \ 12 \ 12 \ *13* \ 13 \ 13 \ 14 \ 15 \ 
+*17* \ 17 \ 18 \ 19 \ 20 \ *23 \ 24 \ 25 \ 26 \ 28*] 
+)
 
 #pagebreak()
 
 // NOTE: Página en blanco
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #page([])
 #pagebreak()
 
 // NOTE: Summary
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "1. S", "UMMARY") 
 
@@ -229,8 +246,6 @@ which are explicit methods.
 
 // NOTE: Resum
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "2. R", "ESUMEN") \
 #v(1em)
@@ -267,8 +282,6 @@ y Runge-Kutta de orden 2 y 4, métodos explícitos.
 
 // NOTE: Introduction
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "3. I", "NTRODUCTION") 
 
@@ -510,8 +523,6 @@ full vector of unknowns.
 
 // NOTE: Objectives
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "4. O", "BJECTIVES") 
 
@@ -525,8 +536,6 @@ in class and the knowledge aquired through them are the true goal of this work.
 
 // NOTE: Experimental section
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "5. E", "XPERIMENTAL SECTION") 
 
@@ -580,8 +589,6 @@ and will plot a graph using the values given as inputs.
 
 // NOTE: Butler-Volmer y RDE
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "6. I", "MPLEMENTATION OF THE CODE")
 
@@ -595,7 +602,7 @@ which will be given by the overpotential.
 
 The Butler-Volmer function has the following structure:
 #figure(
-image("ButlerVolmerStructure.png", width: 50%),
+image("ButlerVolmerStructure.png", width: 45%),
 caption: [structure overview of ButlerVolmer.py])
 
 First, inputs are obtained through the error.py module, which consists of a 
@@ -633,7 +640,7 @@ creation of the boundary layer. Finally, the solution uses a Newtonian fluid
 with constant viscosity. The structure of the function is the following:
 
 #figure(
-image("RotatingDiskElectrodeStructure.png", width: 50%),
+image("RotatingDiskElectrodeStructure.png", width: 45%),
 caption: [structure overview of RotatingDiskElectrode.py])
 
 Inputs are once again handled by the error helper function, ensuring that 
@@ -649,10 +656,7 @@ diffusion layer thickness $delta$ is calculated using Eq.13 and the limiting cur
 $i_"lim"$ is computed for the entire range. Finally, the results are plotted as a
 graph of $i_"lim"$ vs. RPM using the "plotGraph" helper function. 
 
-#pagebreak()
-
 // NOTE: Battery discharge
-
 
 == 6.3 BatteryDischarge.py
 The simulation of a battery discharge process, as formulated in the previous 
@@ -670,7 +674,7 @@ linearly between known data points. The structure of the battery discharge
 simulation is the following:
 
 #figure(
-image("BatteryDischargeStructure.png", width: 50%),
+image("BatteryDischargeStructure.png", width: 45%),
 caption: [structure overview of BatteryDischarge.py])
 
 Inputs are once again handled by the error helper function. Variables as the 
@@ -683,7 +687,7 @@ when the limiter is set: the dynamic duration of the battery's SOC is the source
 of the problem. Then, the SOC differential is calculated through the simplified 
 Eq.37 ($d"SOC" = - I(t)/Q_"nom"$) and the if the time limiter is unset (input is 0) 
 then it's set as 9e34 to ensure the battery discharges fully. The main loop of 
-the function starts: for each step, the voltage through Eq.17 is 
+the function starts: for each step, the voltage through Eq.19 is 
 calculated and appended into its corresponding position in the voltages list. 
 The new SOC is set and the time differential is added to the current time, the 
 loop is ready to perform a new iteration. To obtain the OCV atrributed to the 
@@ -700,8 +704,6 @@ Numpy's "arange" with the length of the voltages multiplied by dt as an input.
 After generating a voltage vs. time plot, the user is prompted for a filename, 
 and the resulting graph is saved, providing a visual representation of the battery's 
 discharge curve.
-
- // WARN: haciendose
 
 == 6.4 CyclicVoltammetry.py
 The simulation of a Cyclic Voltammetry (CV) is the most complex main funcion file in 
@@ -747,7 +749,7 @@ finally, through if statements a numerical method is selected based on the order
 When order is 0, the Crank-Nicolson method is selected. The implementation of the 
 the method employs a function named "newton_thomas" as a solver, which applies 
 the implicit Crank-Nicolson method by averaging the current ($u_t$) and future 
-($u_(t + 1)$ three-point formulas, as done in Eq. . Then solves the resulting 
+($u_(t + 1)$ three-point formulas, as done in Eq.33. Then solves the resulting 
 tridiagonal system with the implemented Thomas algorithm. Because Crank-Nicolson 
 cannot solve non-linear equations and the surface concentrations are non-linear, 
 a Newton-Raphson iteration to find a self-consistent solution (a solution with 
@@ -756,7 +758,7 @@ low enough error) for $C_(O,0)$ and $C_(R,0)$ at each time step is employed.
 
 When order is 2 is Heun's method (RK2) is selected. The implementation employs the 
 a tecnique called Method of Lines, which discretizes the spacial second 
-derivative of Eq. , effectively transforming the diffusion PDE into a system 
+derivative of Eq.21, effectively transforming the diffusion PDE into a system 
 of coupled (ODEs). To solve the system obtained first, the algorithm calculates 
 an initial derivative using the "get_derivatives" function and then computes an 
 average slope over the interval $Delta t$ to as a slope corrector. This approach 
@@ -784,21 +786,174 @@ time steps as frames for the animation.
 
 #pagebreak()
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "7. R", "ESULTS AND DISCUSSION") 
 
 To prove the program works and the simulations are legitimate, the graphical output 
-from the simulations must be compared with experimental sources. 
+from the simulations must be compared with experimental sources. The validation 
+process focuses on three pillars: thermodynamic consistency (Nernstian behavior), 
+kinetic accuracy (Butler-Volmer response), and numerical stability (convergence of 
+the Crank-Nicolson vs. RK4 solvers).
+
+By comparing the simulated data against established literature values, the 
+quantification of the error margins of our discrete model. This section discusses 
+the transition from the continuous physical laws to the numerical approximations 
+required for computational execution.
 
 == 7.1 Butler Volmer
-The Butler volme output graph must imitate closely the 
+The Butler volme output graph must imitate closely the graph studied in "Química 
+Física 3", that means: at an overpotential of 0 V, the current density must be exactly 
+0 A/$m^2$. This represents the system at equilibrium where the anodic and cathodic 
+currents cancel each other out. There also must be a linear region at small 
+overpotentials ($eta < 10^(-4)V$), where the curve must look like a straight line where
+current is directly proportional to overpotential. At larger overpotentials ($abs(eta) > 0.1V$)
+a Tafel region where current should increase exponentially as moving further away 
+from equilibrium must be noticeable. Finally, for a $beta_c = 0.5$, the positive 
+y-axis curve for oxidation ($eta > 0$) and the negative y-axis curve for reduction 
+($eta < 0$) should be mirror images of each other.\
+First, the function with no reactives was tried:
+#figure(
+image("a.png", width: 50%),
+caption: [Butler Volmer with no reactives]
+)
+Then, ferrocinium reduction to ferrocene with the same concentration ($E_"eq" = 0.4$)
+and with 10 times the concentration of the oxidized species ($E_"eq" = 0.46$) was tried:
+#figure(
+image("test1.png", width: 45%),
+caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-4) "mol", ["Fc"] = 10^(-4) "mol"$]
+)
+#figure(
+image("test2.png", width: 45%),
+caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-3) "mol", ["Fc"] = 10^(-4) "mol"$]
+)
 
+== 7.2 Rotating Disk Electrode
+The Rotating Disk Electrode output graph must imitate properly a graph resembling the function 
+$sqrt(x)$, as the graph measures current vs RPM and the Levich equation (Eq.11) states 
+$i_L prop omega^(1/2)$. The Levich equation states the limit intensity must be linearly 
+proportional to both the bulk concentration and electrode area. Testing the relation of 
+the obtained limit intensity shows these graphs:
+First, the standard ferrocene measurement with common parameters was tried:
+#figure(
+image("rpmtest2.png", width: 45%),
+caption: [Standard limit intensity measurement with ferrocene]
+)
+As the afromentioned proportionally could be checked, obtaining  $i_L = 2 10^(-4)A$.  Next 
+the linear relation with concentration and area was tested. With the same parameters, 
+only varying concentration first, then area, the resulting plots were obtained:
+#figure(
+image("rpmtest3.png", width: 45%),
+caption: [10 times the concentration]
+)
+
+#figure(
+image("rpmtest4.png", width: 45%),
+caption: [10 times the area]
+)
+
+== 7.3 Battery Discharge
+To test whether the discharge curve from the output graph is close to a experimental 
+discharge curve is redundant, as the output graph is a literal interpolation of 
+the real graph. This does not mean no test is needed to be done, as parameters can 
+be given as an input. The terminal voltage obtained from Eq.19 has two terms: OCV 
+is directly interpolated from experimental output, and the other is a product of
+$I(t)$, which we assume constant, and $R_"int"$, which is a constant. The only 
+modification $I R_"int"$ can bring is a constant change on the y-axis, but no
+meaningful slope change. 
+
+#figure(
+image("battest1.png", width: 50%),
+caption: [Basline]
+)
+
+#figure(
+image("battest2.png", width: 50%),
+caption: [10 times $I R_"int"$]
+)
+
+The rate at which SOC(t) changes, through Eq.37, is the only meaningful change, 
+as can be seen in the next graph:
+
+#figure(
+image("battest3.png", width: 50%),
+caption: [$1 / 5 Q_"nom"$]
+)
+As seen, even if the time until full discharge is shorter, the discharge curve 
+still mantains the same form. That's because at constant discharge current the 
+form of the discharge curve is intrinsic to the chemistry redox reactions within
+the battery.
+
+== 7.4 Cyclic Voltammetry
+The core of this project, the cyclic voltammetry, introduces three numerical 
+methods, with different precision from each other, one implict and two explicit. 
+To properly test the resulting voltammogram, the following must be considered:
+Peak separation ($Delta E_p$), the ratio of anodic current density $j_(p,a)$ to 
+cathodic current density $j_(p,a)$, Randles-Sevcik linearity and numerical stability 
+and precision between numerical methods. To ensure the highest precision with the 
+tests, Runge-Kutta 4 will be chosen as the baseline.\
+
+A common voltammogram for a linear sweep has two peaks, one positive, denoting 
+the anodic current from the oxidation, and one negative, denoting the cathodic 
+current from the reduction. The standard ferrocene test will be the baseline. 
+
+#figure(
+image("CVtest1.png", width: 50%),
+caption: [Baseline, ferrocene, $C_(O,"bulk") = 1 "mM", C_(R,"bulk") = 1 "mM"$]
+)
+
+
+#figure(
+image("CVtest2.png", width: 50%),
+caption: [$1/1000 k_0$ ]
+)
+
+#figure(
+image("CVtest3.png", width: 50%),
+caption: [$beta_c = 0.75$]
+)
+
+#figure(
+image("CVtest4.png", width: 50%),
+caption: [$E_"start"$ not at the equilibrium potential]
+)
+
+A strange peak appears at the beggining of the simulation when starting at a 
+different potential than the equilibrium potential. The peak appears since the 
+system is found suddenly in an unstable potential with concentrations physically 
+impossible to achieve at those potentials, so the excess is all oxidized suddenly.
+Relaxation was tried to solve the problem, however proper relaxation needed more 
+loop iterations so it was discarded. Implementation of migration on top of the 
+initial diffusion was considered, but the addition of migration brought non-linearty 
+to the interior concentration too. As Crank-Nicolson was already implemented, the 
+decision of not adding migration contribution was chosen. \
+Finally, to test the precision of the three methods, a $1/10$ of the baseline's 
+scan rate is tried:
+#figure(
+grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 10pt,
+[#image("RK2.png") \ Heun (RK2)],
+[#image("RK4.png") \ Runge-Kutta 4],
+[#image("CN.png") \ Crank-Nicolson],
+),
+caption: [Comparison at a low time step between all methods]
+)
+
+And $10$ times of the baseline's scan rate:
+#figure(
+grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 10pt,
+[#image("RK22.png") \ Heun (RK2)],
+[#image("RK42.png") \ Runge-Kutta 4],
+[#image("CN2.png") \ Crank-Nicolson],
+),
+caption: [Comparison at a high time step between all methods]
+)
+As it can be seen, there's not much difference between the precision for 
+the test scans, but it can be seen how Randall-Sevcik's relation is followed.
 #pagebreak()
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") 
 
@@ -854,8 +1009,6 @@ instructions perform multiple operations in one CPU cycle.
 
 // NOTE: Conclusion
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "9. C", "ONCLUSIONS") 
 
@@ -866,8 +1019,6 @@ using advanced numerical methods, as seen in the sections before.
 
 // NOTE: References and notes
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "10. R", "ERENCES AND NOTES") 
 
@@ -882,8 +1033,6 @@ using advanced numerical methods, as seen in the sections before.
 
 // NOTE: Acronyms
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #v(2.5cm)
 #weird(16pt, 11pt, "11. A", "CRONYMS") 
 
@@ -919,51 +1068,23 @@ using advanced numerical methods, as seen in the sections before.
 
 #pagebreak()
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #align(center)[#h(5cm)#set text(fill: black.lighten(35%))
 #weird(36pt, 26pt, "A", "PPENDICES")]
 
 #pagebreak()
 
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #weird(16pt, 11pt, "P", "ROGRAM CODE")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("interface.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("utils.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("error1.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("error2.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("error3.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("ButlerVolmer.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("RotatingDiskElectrode.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("BatteryDischarge.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("CyclicVoltammetry1.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("CyclicVoltammetry2.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("CyclicVoltammetry3.png")
-#let page_number = page_number + 1
-#set page(header: which_header(page_number))
 #image("CyclicVoltammetry4.png")
 
 

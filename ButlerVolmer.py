@@ -52,7 +52,6 @@ def ButlerVolmer() -> None:
     E_ap = e.error("E_ap")
     E_ref = e.error("E_ref")
     E_eq, n_el = getEeq(c_red, c_ox, T)
-    print(f'E eq: {E_eq}, n,el: {n_el}')
 
     eta = E_ap - E_eq - E_ref
     nsteps = 1000 * abs(eta)
