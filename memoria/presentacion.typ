@@ -252,6 +252,7 @@ $ V = "OCV"("SOC") - I R_"int" $
     ]
   )
 ]])
+
 == CyclicVoltammetry.py
 #grid(columns: (1fr, 1fr),[
 #set text(size: 18pt)
@@ -320,121 +321,44 @@ $ J = - D (partial C) / (partial x) $
     width: 50%,
     [
 $ (partial C) / (partial t) = D (partial^2 C) / (partial x^2) $
-    ])]
-  ],[
+    ])]]
+  )
+
+#grid([
 #set text(size: 18pt)
 #figure(
-image("CVtest3.png", width: 50%),
-caption: [Voltammogram, $beta_c = 0.75$]
-)
-],[
-#set text(size: 18pt)
-#figure(
-image("CVtest4.png", width: 50%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
-)
-],[
-  #v(2em)
-  #align(center)[#block(
-    fill: rgb("#e1f5fe"), 
-    stroke: 1pt + blue,
-    inset: 12pt,
-    radius: 4pt,
-    width: 50%,
-    [
-$ J = - D (partial C) / (partial x) $
-    ])]
-],[
-  #v(2em)
-  #align(center)[#block(
-    fill: rgb("#e1f5fe"), 
-    stroke: 1pt + blue,
-    inset: 12pt,
-    radius: 4pt,
-    width: 50%,
-    [
-$ (partial C) / (partial t) = D (partial^2 C) / (partial x^2) $
-    ])]
-  ],[
-#set text(size: 18pt)
-#figure(
-image("CVtest3.png", width: 50%),
-caption: [Voltammogram, $beta_c = 0.75$]
-)
-],[
-#set text(size: 18pt)
-#figure(
-image("CVtest4.png", width: 50%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
-)
-],[
-  #v(2em)
-  #align(center)[#block(
-    fill: rgb("#e1f5fe"), 
-    stroke: 1pt + blue,
-    inset: 12pt,
-    radius: 4pt,
-    width: 50%,
-    [
-$ J = - D (partial C) / (partial x) $
-    ])]
-],[
-  #v(2em)
-  #align(center)[#block(
-    fill: rgb("#e1f5fe"), 
-    stroke: 1pt + blue,
-    inset: 12pt,
-    radius: 4pt,
-    width: 50%,
-    [
-$ (partial C) / (partial t) = D (partial^2 C) / (partial x^2) $
-    ])]],[
-#set text(size: 18pt)
-#figure(
-image("pres1.png", width: 100%),
+image("CVp1.png", width: 100%),
 caption: [$t = t_0$]
 )
 ],[
 #set text(size: 18pt)
 #figure(
-image("pres2.png", width: 100%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
+image("CVp2.png", width: 100%),
+caption: [Alcanza el pico de oxidación]
 )
   ],[
 #set text(size: 18pt)
 #figure(
-image("pres3.png", width: 100%),
-caption: [Voltammogram, $beta_c = 0.75$]
+image("CVp3.png", width: 100%),
+caption: [No [Red] restante, control por difusión]
 )
 ],[
 #set text(size: 18pt)
 #figure(
-image("pres4.png", width: 100%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
+image("CVp4.png", width: 100%),
+caption: [Comienza el barrido hacia el lado opuesto]
 )
   ],[
 #set text(size: 18pt)
 #figure(
-image("pres5.png", width: 100%),
-caption: [Voltammogram, $beta_c = 0.75$]
+image("CVp5.png", width: 100%),
+caption: [$E = E_"eq"$, [Red] = [Ox]]
 )
 ],[
 #set text(size: 18pt)
 #figure(
-image("pres6.png", width: 100%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
-)
-],[
-#set text(size: 18pt)
-#figure(
-image("pres7.png", width: 100%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
-)
-],[
-#set text(size: 18pt)
-#figure(
-image("pres8.png", width: 100%),
-caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
+image("CVp6.png", width: 100%),
+caption: [Se alcanza el pico de reducción, las concentraciones lejos del electrodo tardan en ecualizarse]
 )
   ])
 
@@ -455,17 +379,17 @@ caption: [Voltammogram, $E_"start"$ not at the equilibrium potential]
 ],[
 #image("BatteryDischarge.png", height: 100%)
 ],[
-#image("CVp2.png", width: 100%)
+#image("CVpp1.png", width: 100%)
 ],[
-#image("CVp1.png", width: 100%)
+#image("CVpp2.png", width: 100%)
 ],[
-#image("CVp3.png", width: 100%)
+#image("CVpp3.png", width: 100%)
 ],[
-#image("CVp4.png", width: 100%)
+#image("CVpp4.png", width: 100%)
 ],[
-#image("CVp5.png", width: 100%)
+#image("CVpp5.png", width: 100%)
 ],[
-#image("CVp6.png", width: 100%)
+#image("CVpp6.png", width: 100%)
 ],[
 #image("CVp7.png", height: 100%)
 ],[
