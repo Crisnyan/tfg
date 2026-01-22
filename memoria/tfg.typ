@@ -165,15 +165,15 @@ chemistry.
 #weird(10pt, 8pt, "2. R", "ESUMEN") \ 
 #weird(10pt, 8pt, "3. I", "NTRODUCTION") \ 
 #h(1.5em)3.1. Electrochemistry \
-#h(3em)3.1.1. The butler-volmer's equation \
-#h(3em)3.1.2. Levich and rotating disk electrode \
+#h(3em)3.1.1. The Butler-Volmer's equation \
+#h(3em)3.1.2. Levich and the rotating disk electrode \
 #h(3em)3.1.3. Battery discharge equation \
 #h(3em)3.1.4. Cyclic voltammetry \
 #h(1.5em)3.2. Numerical methods for differential equations \
 #h(3em)3.2.1. Euler's method \
 #h(3em)3.2.2. Heun's method \
-#h(3em)3.2.3. Runge-kutta 4 \
-#h(3em)3.2.4. Crank-nicolson \
+#h(3em)3.2.3. Runge-Kutta 4 method \
+#h(3em)3.2.4. Crank-nicolson's method \
 #h(3em)3.2.5. Thomas algorithm \
 #weird(10pt, 8pt, "4. O", "BJECTIVES") \
 #weird(10pt, 8pt, "5. E", "XPERIMENTAL SECTION") \
@@ -194,7 +194,7 @@ chemistry.
 #h(1.5em)7.4. CyclicVoltammetry \
 #weird(10pt, 8pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") \
 #weird(10pt, 8pt, "9.C", "ONCLUSIONS") \
-#weird(10pt, 8pt, "10. R", "ERERENCES AND NOTES") \
+#weird(10pt, 8pt, "10. R", "EFERENCES AND NOTES") \
 #weird(10pt, 8pt, "11. A", "CRONYMS") \
 #weird(10pt, 8pt, "A", "PPENDIX: PROGRAM CODE")],
 align(right)[#v(3.7cm) *3 \ 4 \ 5* \ 5 \ 5 \ 6 \ 6 \ 7 \ 7 \ 7 \ 8 \ 
@@ -222,20 +222,20 @@ systems of hundreds of thousands of atoms, making it possible to simulate protei
 interactions and obtain potential drugs for diseases that were previously incurable.
 
 In order to solve the necessary equations, analytical solutions are not always 
-possible, so so-called numerical methods are used. Numerical methods are mathematical 
+possible, so the so-called numerical methods are used. Numerical methods are mathematical 
 techniques that, instead of finding an exact solution as analytical methods do, 
-find an approximate solution, which means they involve an error (the difference 
+find an approximate solution, which means that they involve an error (the difference 
 between the solution obtained and the exact solution) that is not necessarily 
 negligible in the answer. The magnitude of the error depends on the numerical 
 method, where the most accurate ones are usually the most expensive in terms of 
-time and computation, so in some cases the method with the most error may be preferred.
+time and computation, so in some cases a method with a reasonable error may be preferred.
 
 All programs start from code in a file, and this TFG will explain the creation 
 and development of a program in Python, where the program in question will attempt 
 to solve equations posed in the subject “Physical Chemistry III” of the chemistry 
 degree at the UB, focusing on the topic of electrochemistry. Relevant numerical 
 methods for solving differential equations will also be mentioned, specifically the 
-Crank-Nicolson method, an implicit method, and Runge-Kutta methods of order 2 and 4, 
+Crank-Nicolson method, an implicit method, and the Runge-Kutta methods of order 2 and 4, 
 which are explicit methods.
 
 #v(3em)
@@ -251,19 +251,19 @@ which are explicit methods.
 #v(1em)
 
 El desarrollo de programas enfocados para la química ha permitido el ahorro de 
-tiempo, dinero y, más importante, reactivos. Programas como gaussian, mediante 
-la resolucion de ecuacion de Schrödinger, han permitido una agilicación en el 
+tiempo, dinero y, más importante, reactivos. Programas como Gaussian, mediante 
+la resolucion de la ecuación de Schrödinger, han permitido una agilicación en el 
 desarrollo químico y tecnológico imposibles de concebir previamente.
 Otros programas como LeaP, permiten simulaciones de sistemas de átomos del
 orden de cientos de miles, pudiendo simular interacciones proteína-fármaco y 
 obtener potenciales fármacos contra enfermedades antes sin cura.\ 
 Para poder resolver las ecuaciones necesarias, las soluciones analíticas no 
-siempre son posibles, sinó que se utilizan los llamados métodos numéricos. Los 
+siempre son posibles, sino que se utilizan los llamados métodos numéricos. Los 
 métodos númericos son técnicas matemáticas que en vez de encontrar una solución 
-exacta, como lo hacen las analíticas, encuentras una solución aproximada, por lo 
-que conllevan un error (la diferéncia entre la solución obtenida y la exacta) 
-que no neceáriamente es negligible en la respuesta. La magnitud del error depende 
-del método numérico, donde los más precisos suelen ser los más caros en cuanto a 
+exacta, como lo hacen las técnicas analíticas, encuentran una solución aproximada, por lo 
+que conllevan un error (la diferencia entre la solución obtenida y la exacta) 
+que no necesáriamente es negligible en la respuesta. La magnitud del error depende 
+del método numérico, donde los más exactos suelen ser los más caros en cuanto a 
 tiempo y computacionalmente, por lo que en algunos casos el método con más error 
 puede ser el preferido. \
 Todos los programas parten de código en un archivo, y en este TFG se explicará 
@@ -272,7 +272,7 @@ tratará de resolver ecuaciones planteadas en la asignatura "Química Física II
 del grado de química de la UB, centrado en el tema de electroquímica. También se 
 mencionarán métodos numéricos relevantes en la resolución de ecuaciones 
 diferenciales, específicamente el método de Crank-Nicolson, un método implícito, 
-y Runge-Kutta de orden 2 y 4, métodos explícitos.
+y los Runge-Kutta de orden 2 y 4, métodos explícitos.
 
 #v(3em)
 
@@ -287,23 +287,21 @@ y Runge-Kutta de orden 2 y 4, métodos explícitos.
 
 == 3.1 Electrochemistry 
 Electrochemistry is the branch of chemistry that focuses on reactions where 
-oxidation and reduction happens. These reactions are commonly called redox 
+oxidation and reduction happen on the electrodes. These reactions are commonly called redox 
 reactions, inheriting the "red" from reduction and the "ox" from oxidation.
-A general form for an oxidized species being reduced or vice-versa would be:
+A general form for an oxidized species being reduced or vice-versa would be$""^[1]$:
 $ O + e^-  harpoons.rtlb R $ 
-A cathode is an electrode where the reduction process ocurrs, while an anode 
-is an electrode where an oxidation process happens. Electrochemical reactions 
-and processes might be referred as anodic or cathodic instead. To express the 
-reaction rate of a electrochemical reaction, the product of the reactive and 
-a constant (cathodic or anodic) is taken, such that:
+The cathode is the electrode where the reduction process occurs, while the anode 
+is the electrode where the oxidation process happens. Electrochemical reactions 
+and processes might be referred as anodic or cathodic. To express the reaction rate 
+of the cathodic and anodic processes of a electrochemical reaction, the following 
+relation exists:
 $ nu_c = k_c [O] \ 
   nu_a = k_a [R] $ 
 The constants, $k_a$ and $k_c$, can be represented through the transition state 
-theory as:
-$ k_c = A exp((Delta G^dagger.double_c)/(R T)) \ 
-  k_a = A exp((Delta G^dagger.double_a)/(R T)) $
-Before applying any potential, $k_a = k_c$ since $Delta G^dagger.double_a = Delta 
-G^dagger.double_c$, so $k_0$ is defined to be either $k_a$ or $k_c$ at $E = E_0$.
+theory as$""^[2]$:
+$ k_c = (k_b T) / h  exp((-Delta G^dagger.double_c)/(R T)) \ 
+  k_a = (k_b T) / h exp((-Delta G^dagger.double_a)/(R T)) $
 When applying a potential to an electrode, the energy of the electrons in it canges,
 which shifts the activation energy barriers. The shift can be represented by the 
 transfer coefficient ($beta$), which represents the fraction of the electrical energy 
@@ -311,12 +309,17 @@ that affects the transition state. Since $E^0$ is the formal potential, the chan
 activation energy due to the overpotential relating to it ($eta = E_(a p) - E^0$) is:
 $ Delta G^dagger.double_c (E) = Delta G^dagger.double_(0,c) + beta F (E - E^0) \
  Delta G^dagger.double_a (E) = Delta G^dagger.double_(0,a) + (1 - beta) F (E - E^0) $
+At the formal potential ($E = E^0$), $Delta G^dagger.double_(0,c) = Delta G^dagger.double_(0,a)$, 
+allowing the definition of the standard rate constant $k_0 = k_c = k_a$. However, when the 
+overpotential is zero ($eta = 0$), the condition $v_c = v_a$ must be met, which does not 
+necessarily imply that the rate constants or the activation energies are identical if 
+the concentrations differ.
 The cathodic barrier shifts into higher energies when the overpotential is positive 
 by a factor of $beta F eta$, while the anodic shifts into lower energies by a factor 
 of $(1 - beta) F eta$. The opposite is true for negative overpotentials. Substituting 
 brings this new form of Eq.3 alive:
-$ k_c = k_0 exp((Delta G^dagger.double_c)/(R T)) \ 
-  k_a = k_0 exp((Delta G^dagger.double_a)/(R T)) $
+$ k_c = k_0 exp((- Delta G^dagger.double_c)/(R T)) \ 
+  k_a = k_0 exp((- Delta G^dagger.double_a)/(R T)) $
 
 === 3.1.1 The Butler-Volmer's equation
 The Butler-Volmer equation connects the thermodynamics of the reactions, given by 
@@ -333,14 +336,17 @@ there's where the reaction happens, and it can be further expanded using Eq.3:
 $ j = F k_0 ([R]_s exp(((1 - beta) F eta)/(R T)) - [O]_s exp((beta F eta)/(R T))) $
 The final expanded equation now relates the overpotential directly with the current 
 density. This, however, is not the common writing of the Butler-Volmer equation 
-either, as it can be compacted by defining the exchange current density $j_0$ as:
-$ j_0 = F k_0 [R]^beta [O]_b^((1 - beta)) $
+either, as it can be compacted by defining the exchange current density $j_0$, using 
+the concentrations at equilibrium as:
+$ j_0 = F k_0 [R]_"eq"^beta [O]_"eq"^((1 - beta)) $
 $j_0$ is defined as he dynamic equilibrium current that flows equally in both 
 directions when the overpotential is zero, ie. $eta = 0$, and reflects the 
 intrinsic speed of the reaction. The exchange current density uses the bulk 
-concentrations as no reaction is happening, so the system is at rest. Compacted, 
-the Butler-Volmer equation is written commonly as: 
+concentrations as no net reaction is happening. The Butler-Volmer equation 
+is written commonly in a compact form as: 
 $ j = j_0 (exp(((1 - beta) n F eta)/(R T)) - exp(-(beta n F eta)/(R T))) $
+where $n$ is the number of electrons transfered. The previous considerations were 
+made considering a single electron tranfer.
 
 === 3.1.2 Levich and rotating disk electrode
 A Rotating Disk Electrode (RDE) is a tool used to measure the hydrodynamics and 
@@ -350,7 +356,7 @@ rotation the RDE creates a constant, well-defined flow of electrolyte toward the
 surface of the electrode.\
 The Levich equation is able to link the rotation of the RDE with the resulting 
 limit current $i_L$, which is defined as the maximum current achieved when the 
-reaction is diffusion controlled, ie., by how fast reactants can be diffused 
+reaction is diffusion controlled, i.e., by how fast reactants can be diffused 
 through the boundary layer, throughout this formula:
 $ i_L = 0.620n F A D^(2/3) omega^(1/2) nu^(-1/6) C $
 which can be written alternatively, integrating the diffusion layer as a parameter: 
@@ -359,23 +365,23 @@ with the diffusion layer being defined as:
 $ delta = 1.61 D^(1/3) omega^(-1/2) nu^(1/6) $
 
 === 3.1.3 Battery discharge equation
-Voltage though a circuit can be measured and calculated with Ohm's law:
+The voltage though an electrical circuit can also be calculated with Ohm's law:
 $ V = I R $
-A battery can be thought as a simple circuit, with an internal resistance:
+A battery can be thought as a simple electrical circuit, with an internal resistance, so that:
 $ V = V - I R_"int" $
 The voltage when there's no current is known as the open circuit voltage, and 
-is commonly denoted by the initials OCV, and depends on the state of charge of 
+is commonly denoted by the initials OCV. It depends on the state of charge of 
 the battery (SOC), which is a percentage that represents the capacity in a 
 rechargeable battery, where at 100% the battery is at full capacity and at 0% 
 the battery is depleted. The discharge of a battery can be thought as the 
 decreasing of the SOC. The SOC, then, can be thought of as a function depending 
 on time, where the current $I(t)$ acts as a drain to the capacity ($Q_"nom"$) of 
-the battery, expresed as:
+the battery, expresed as$""^[4]$:
 $ "SOC"(t) = "SOC"_(t = 0) - 1 / Q_"nom"integral^t_0 I(t) d t $
 The voltage of the battery then can be expressed as the difference of the OCV 
 and the sum of causes of energy loss:
 $ V = "OCV"("SOC") - I R_"int" - eta_"act" $
-While $I R_"int"$ accounts for energy loss as a "physical" resistance, as electrons 
+While $I R_"int"$ accounts for the energy loss as a "physical" resistance, as electrons 
 are moving through the material, $eta_"act"$ accounts for energy loss as a "chemical" 
 resistance, as the energy required to make the redox reaction happen. Additionally, 
 $eta_"act"$ obeys the following relation:
@@ -385,13 +391,14 @@ simplified as the following equation:
 $ V = "OCV"("SOC") - I R_"int" $
 
 === 3.1.4 Cyclic Voltammetry
-A Cyclic Voltammetry is a electrochemical measuring technique where electrical 
-potential $E$ is applied in sweeps and current is obtained as an output. The current 
+The Cyclic Voltammetry (CV) is a electrochemical technique where an electrical 
+potential $E$ is applied to the working electrode in sweeps and a current is 
+obtained between the working and the counter electrodes$""^[6]$. The current 
 $i$ obtained is determined by the Butler-Volmer equation (Eq.10), however, another 
-important factor to consider is the diffusion of the electrolyte, which is dictated 
-by Fick's laws:
+important factor to consider is the diffusion of the electroactive species, which 
+is dictated by the Fick's laws:
 $ J = - D (partial C) / (partial x) $
-The first fick law describes how a diffusion flux is formed when a concentration 
+The first Fick law describes how a diffusion flux is formed when a concentration 
 gradient exists throughout a distance.The negative sign is crucial because it 
 shows that the species move from high to low density regions to reach equilibrium.
 $ (partial C) / (partial t) = D (partial^2 C) / (partial x^2) $
@@ -400,8 +407,8 @@ how the rate of change of concentration respect to time relates to the curvature
 of the concentration gradient.\
 It is useful to think of the CV sweep as a transition between two regimes. 
 First, the system is kinetically controlled, as the Butler-Volmer equation 
-dictates the current based on the applied overpotential. However, as no infinite  
-concentration of electrolyte exists, when the overpotential exceeds a threshold, 
+dictates the current based on the applied overpotential. However,  when the 
+overpotential exceeds a threshold, 
 the concentration at the surface of the electrode drops to zero and the system 
 becomes diffusion controlled. At that point, diffusion of the electrolyte to the 
 surface of the electrode becomes the limiting factor and the current begins to 
@@ -415,13 +422,13 @@ differences. Finding a first order derivative is as simple as substituting the
 infinitesimally small $h$ by a finitely small $Delta x$ in the definition of 
 derivative:
 $ f'(x) approx (f(x + Delta x) - f(x)) / (Delta x) $
-This substitution cannot obtain the same value as the real derivative, and 
+This substitution cannot lead to the same value as the exact derivative, and 
 brings a truncation error of the order of $Delta x$, commonly denoted $O(Delta x)$. 
 For higher order derivatives, we can repeat the same process, however, the 
 associated error can be minimized by using a clever trick with Taylor expansions:
-$ f(x + Delta x) = f(x) + f'(x) Delta x f''(x) Delta x^2 + f'''(x) Delta x^3 + O(Delta x^4) $
-$ f(x - Delta x) = f(x) - f'(x) Delta x f''(x) Delta x^2 - f'''(x) Delta x^3 + O(Delta x^4) $
-Adding $f(x + Delta x) + f(x - Delta x)$ we obtain the three point formula:
+$ f(x + Delta x) = f(x) + f'(x) Delta x + (f''(x)) / 2! Delta x^2 + (f'''(x)) / 3! Delta x^3 + O(Delta x^4) $
+$ f(x - Delta x) = f(x) - f'(x) Delta x + (f''(x)) / 2! Delta x^2 - (f'''(x)) / 3! Delta x^3 + O(Delta x^4) $
+Adding $f(x + Delta x)$ to $f(x - Delta x)$ we obtain the three point formula:
 $ f''(x) approx (f(x + Delta x) - 2f(x) + f(x - Delta x)) / (Delta x^2) $
 This numerical second order derivative has a error of order $O(Delta x^4)$, as 
 both the first and third order terms vanish when adding, which makes it both 
@@ -429,13 +436,13 @@ efficient and precise for numerical computations.
 
 === 3.2.1 Euler's method
 The simplest numerical method to solve differential equations was published by 
-Leonhard Euler in 1768, and it's known as Forward Euler, as it's an explicit
-method, or just Euler's method. This numerical method core idea is to treata 
+Leonhard Euler in 1768, and it's known as forward Euler, as it's an explicit
+method, or just Euler's method. The method's core idea is to treat a 
 differential equation as a formula for the slope of the tangent line. The curve 
 $f(x)$ is initially unknown, but a defined starting point $(x_0, y_0)$ is required,
 as computing the derivative $f'(x)$ at this point enables the recursive calculation 
 of the next points. The tangent line obtained through the derivative acts as the 
-direction towards the next step, the distance moved depending on $Delta x$:
+direction towards the next step, with the distance moved depending on $Delta x$:
 $ f(x_0 + Delta x) = f(x_0) + f'(x_0) Delta x $
 or written alternatively, using subscripts instead:
 $ y_1 = y_0 + y'_0 Delta x \
@@ -445,10 +452,10 @@ Recursively, we arrive to a general formula:
 $ y_(n + 1) = y_n + y'_n Delta x $
 
 === 3.2.2 Heun's method
-Heun's method, also named improved forward Euler's method fixes Euler's method 
-by enforcing a slope correction, it being the average of the current slope and the 
+The Heun's method, also named improved forward Euler's method fixes Euler's method 
+by enforcing a slope correction, which is the average of the current slope and the 
 Euler's predicteed next point. It adresses the primary weakness of Euler's approach, 
-the assumption that the slope remains constant over the entire interval $Delta x$.
+i.e., the assumption that the slope remains constant over the entire interval $Delta x$.
 The process begins by calculating an initial estimate of the next point using a 
 standard Euler step. Although more expensive to compute, averaging this new slope 
 with the initial slope brings a much more accurate result, as it accounts for the 
@@ -460,13 +467,13 @@ $ cases(k_1 = f(x_n, y_n),
 where $f(x_n, y_n)$ corresponds to the derivative at point $x_n$ given the value 
 $y_n$.
 
-=== 3.2.3 Runge-Kutta 4
+=== 3.2.3 Runge-Kutta 4 method
 The Runge-Kutta methods are a family of explicit numerical methods, as it's a 
-generalized form for explicit ODE methods. Euler's method is taken as base, and 
-slope corrections are introduced, with higher order Runge-Kutta methods being more 
+generalized form for explicit ODE methods. The Euler's method is taken as starting point, 
+and slope corrections are introduced, with higher order Runge-Kutta methods being more 
 precise, at the cost of being more computationally expensive. Euler's method by 
 definition is RK1, then Heun's method is RK2, with the most famous method being 
-the fourth order RK4. RK4 expands on Heun's slope correction: 
+the fourth order RK4, which expands on the Heun's slope correction: 
 $ y_(n+1) = y_n + (Delta x)/6 (k_1 + 2k_2 + 2k_3 + k_4) $
 with slopes corresponding to:
 $ cases(
@@ -475,7 +482,7 @@ $ cases(
   k_3 = f(x_n + (Delta x)/2, y_n + (Delta x)/2 k_2),
   k_4 = f(x_n + Delta x, y_n + Delta x k_3)) $
 
-=== 3.2.4 Crank-Nicolson
+=== 3.2.4 Crank-Nicolson's method
 The Runge-Kutta family of methods provide high accuracy for ordinary differential 
 equations, however, for partial differential equations, which involve more than 
 one variable, significant stability challenges are introduced.
@@ -507,7 +514,7 @@ algorithm.
 === 3.2.5 Thomas algorithm
 The Thomas algorithm replaces standard gaussian elimination by providing a 
 more efficient manner of solving tridiagonal matrices, consisting of a forward sweep 
-and back substitution.
+and back substitution$""^[5]$.
 $ mat(b_1, c_1, , , 0; a_2, b_2, c_2, ; , a_3, b_3, dots.down; 
 , , dots.down, dots.down, c_(n-1); 0, , , a_n, b_n) vec(x_1, x_2, x_3, dots.v, x_n) = 
 vec(d_1, d_2, d_3, dots.v, d_n) $
@@ -528,9 +535,9 @@ full vector of unknowns.
 
 // WARN: Objetivos muy simplistas
 
-The primary objective of this TFG is both pedagologycal and didactical: the 
-creation, coding and implementation of the learnt electrochemical systems 
-in class and the knowledge aquired through them are the true goal of this work.
+The primary objective of this TFG is both pedagogical and didactical: the 
+creation, coding and implementation of the electrochemical systems studied
+in class and the knowledge acquired through them are the main goal of this work.
 
 #pagebreak()
 
@@ -540,7 +547,7 @@ in class and the knowledge aquired through them are the true goal of this work.
 #weird(16pt, 11pt, "5. E", "XPERIMENTAL SECTION") 
 
 This TFG's program was made in python 3.13. The main structure of the program is 
-shown by diagram 1:
+shown by Figure 1:
 #figure(
 image("esquema.png"),
 caption: [High-level structure overview]
@@ -562,27 +569,27 @@ be executed by typing python3 interface.py or just ./interface.py.\
 The python file interface.py is the entrypoint of the program, which loads and 
 parses the databases into memory and displays the UI by printing text in the 
 terminal. When executed, the program first displays a selection of options ranging 
-from one to five, as shown in Figure 1, where each mode (excluding 5) executes 
+from one to five, as shown in Figure 2, where each mode (excluding 5) executes 
 one of the four main functions.\
 #figure(
 image("modes.png"),
 caption: [program modes])
 == 5.3 Helper functions
 Helper functions can be thought of rogue functions, as they do not pertain to 
-any specific section. Parsing functions, as "getElectrons" or "error", used 
-to check if the input value is physically sensible are helper functions.\
+any specific section. Parsing functions, as "getElectrons" or "error", which are 
+used to check if the input values are physically meaningful, are helper functions.\
 == 5.4 Databases
-Databases store large amounts of data in information. Two databases are used 
-for this project as .csv files (comma separated values), one in StandardPotentials.csv, 
+Databases store large amounts of useful data. Two databases are used 
+for this project as .csv files (comma separated values). One is given in StandardPotentials.csv, 
 a database that stores half reactions and their corresponding standard reduction 
-potential in volts, while the other, found in BatteryValues.csv relates the SOC of a 
-Li-ion battery to its OCV. These databases are parsed at runtime, when the program 
+potentials (in volts)$""^[3]$,  while the other, which is found in BatteryValues.csv relates the SOC of a 
+Li-ion battery to its OCV$""^[4]$. These databases are parsed at runtime, when the program 
 starts, and are stored as python dictionaries.
 == 5.5 Main functions
-When selecting a mode, not including exit, the program will shift execution from 
+When selecting a mode, without including exit, the program will shift the execution from 
 interface.py to ButlerVolmer.py, RotatingDiskElectrode.py, BatteryDischarge.py 
 or CyclicVoltammetry.py. All these files contain functions which ask for inputs 
-and will plot a graph using the values given as inputs.
+and will plot a graph with the results obtained using the values given as inputs.
 
 #pagebreak()
 
@@ -593,12 +600,12 @@ and will plot a graph using the values given as inputs.
 #weird(16pt, 11pt, "6. I", "MPLEMENTATION OF THE CODE")
 
 == 6.1 ButlerVolmer.py
-The Butler Volmer equation, as described in Eq.10, some assumptions had to be 
+In the Butler-Volmer equation, as described in Eq.10, some assumptions had to be 
 made: First, the system is composed by a three electrodes, a working electrode, 
-a reference electrode and a counter electrode. Second, only one ionic pair 
-contributes to the output intensity and no successive reactions are contemplated. 
-Third, to provide a meaningful graph, the function must be provided a range, 
-which will be given by the overpotential. 
+a reference electrode and a counter electrode. Second, only a redox system 
+contributes to the output intensity and no other reactions occur. 
+Third, to provide a meaningful graph, the function must be provided for a range of values, 
+which will be given by the overpotential values explored. 
 
 The Butler-Volmer function has the following structure:
 #figure(
@@ -616,14 +623,14 @@ proper value through the scipy.constants module. The final input, the half
 reaction, does undergo a special helper function, which checks if the provided 
 half reaction exists in the StandardPotentials database and obtains the 
 associated standard equilibrium potential. The following variables are 
-obtiained as mentioned: temperature, concentration of both the reduced species 
+obtained as mentioned: temperature, concentration of both the reduced 
 and oxidized species, $j_0$, the applied potential and the reference electrode 
-potential (using the Standard Hydrogen Electrode as 0V). A function named 
+potential (using the Standard Hydrogen Electrode as 0 V). A function named 
 "getEeq" is called next, using two helper functions, "getElectrons" and 
-"getStoichCoeffs", to calculate the equilibrium potential through the Nerst 
+"getStoichCoeffs", to calculate the equilibrium potential through the Nernst 
 equation. The overpotential $eta$ is calculated and a numpy ndarray 
 is created through numpy's linspace function, resulting in a ndarray from
-$-abs(eta)$ to $abs(eta)$. Finally, using numpy's exp function, which 
+$-abs(eta)$ to $abs(eta) ""^[7]$. Finally, using numpy's exp function, which 
 applies a exponential to each element of an array without any need to loop, 
 $j_a$ and $j_c$ are assigned, and the currents array obtained from $j_0 * (j_a - j_c)$
 is used to plot a $E "vs" i$ graph with the "plotGraph" helper function and saved 
@@ -634,7 +641,7 @@ In the same spirit as before, first some assumptions have to be explicited to
 determine the scope of the function. The function calculates the limiting 
 current through the Levich equation, assuming the system uses a Rotating Disk
 Electrode or RDE to allow a definite diffusion layer $delta$ to exist by providing 
-laminar flow toward the electrode surfave. The reaction must be always diffusion
+laminar flow toward the electrode surface. The reaction must be always diffusion
 controlled, as the electron transfer should not be the limiting factor for the 
 creation of the boundary layer. Finally, the solution uses a Newtonian fluid 
 with constant viscosity. The structure of the function is the following:
@@ -647,7 +654,7 @@ Inputs are once again handled by the error helper function, ensuring that
 each physical parameter is valid before proceeding with the calculation, and
 the following variables are obtained from the user: the number of electrons 
 involved in the redox process, the diffusion coefficient, the bulk concentration, 
-the viscosity of the electrolyte, the electrode area and the maximum rotation 
+the viscosity of the electrolyte solution, the electrode area and the maximum rotation 
 speed in RPM. 
 A numpy ndarray for the rotation speed is created using numpy's linspace function, 
 ranging from 100RPM to the input provided. The RPM array is converted into angular 
@@ -662,13 +669,13 @@ graph of $i_"lim"$ vs. RPM using the "plotGraph" helper function.
 The simulation of a battery discharge process, as formulated in the previous 
 introduction section, relies on continuous tracking of the State of Charge 
 (SOC) and its relation with the Open Circuit Voltage (OCV). The assumptions 
-integrated into this functions are the following: First, the discharge occurs 
-at a constant current $I$, with a low enough value that $R_"int" >> eta$ and 
+integrated into this function are the following: First, the discharge occurs 
+at a constant current $I$, with a low enough value so that $R_"int" >> eta$ and 
 the simplyfing Eq.16 to the following equation is possible: 
 $ "SOC(t)" = "SOC"_(t=0) - I(t)/Q_"nom" $
 Second, the internal resistance $R_"int"$ is treated as a constant parameter 
-throughout the discharge process, as only one type of battery is considered, a 
-Li-ion battery. Finally, the relation between the SOC and the OCV is derived 
+throughout the discharge process, as only one type of battery is considered (a 
+Li-ion battery). Finally, the relation between the SOC and the OCV is derived 
 from empirical data stored in the database BatteryValues.csv, interpolating 
 linearly between known data points. The structure of the battery discharge 
 simulation is the following:
@@ -679,7 +686,7 @@ caption: [structure overview of BatteryDischarge.py])
 
 Inputs are once again handled by the error helper function. Variables as the 
 current $I$, the internal resistance $R_"int"$, the nominal capacity $Q_"nom"$, 
-initial SOC $"SOC"_(t = 0)$ and finally a time delimiter are obtained through the 
+initial SOC, $"SOC"_(t = 0)$, and a time delimiter are obtained through the 
 user's input. 
 An empty python list is created for the output voltages, as unfortunately is 
 impossible to take advantage of Numpy's ndarrays, as the end time is only known 
@@ -725,12 +732,12 @@ is structured into several components in this fashion:
   image("CyclicVoltammetryStructure.png"),
   caption: [structure overview of CyclicVoltammetry.py])
 
-As before, he "error" function is used to check for valid/sensible physical inputs.
+As before, the "error" function is used to check for valid/sensible physical inputs.
 The following variables are obtained from user input: starting potential, vertex 
-potential, the scan rate $v$, number of cycles, the starting bulk concentration 
+potential, scan rate $v$, number of cycles, the starting bulk concentration 
 for both the oxidized $C_O"(bulk)"$and reduced species, the diffusion coefficient, 
-the reaction's rate constant $k_0$, the cathodic symmetry factor. Through the "getEo"
-helper function, the number of electrons are obtained, along the standard reduction 
+the reaction's rate constant $k_0$, and the cathodic symmetry factor. Through the "getEo"
+helper function, the number of electrons are obtained, along with the standard reduction 
 potential of the input half reaction. The following variables are calculated based on 
 the input obtained values: $t_"max"$, $x_"max"$, $d x$ and $d t$. The times array and 
 potential signals array is generated using the "init_time_potential" function. This 
@@ -749,19 +756,18 @@ finally, through if statements a numerical method is selected based on the order
 When order is 0, the Crank-Nicolson method is selected. The implementation of the 
 the method employs a function named "newton_thomas" as a solver, which applies 
 the implicit Crank-Nicolson method by averaging the current ($u_t$) and future 
-($u_(t + 1)$ three-point formulas, as done in Eq.33. Then solves the resulting 
+($u_(t + 1))$ three-point formulas, as done in Eq.33. Then solves the resulting 
 tridiagonal system with the implemented Thomas algorithm. Because Crank-Nicolson 
 cannot solve non-linear equations and the surface concentrations are non-linear, 
 a Newton-Raphson iteration to find a self-consistent solution (a solution with 
 low enough error) for $C_(O,0)$ and $C_(R,0)$ at each time step is employed.
 
-
 When order is 2 is Heun's method (RK2) is selected. The implementation employs the 
-a tecnique called Method of Lines, which discretizes the spacial second 
+a technique called Method of Lines, which discretizes the spacial second 
 derivative of Eq.21, effectively transforming the diffusion PDE into a system 
 of coupled (ODEs). To solve the system obtained first, the algorithm calculates 
 an initial derivative using the "get_derivatives" function and then computes an 
-average slope over the interval $Delta t$ to as a slope corrector. This approach 
+average slope over the interval $Delta t$ as a slope corrector. This approach 
 achieves a time precision of $O(Delta t^2)$.
 
 Finally , when order is 4,the Runge-Kutta 4 (RK4) algorithm is employed. This 
@@ -779,12 +785,14 @@ kinetics.
 
 Finally, for all the methods, the current density $j$ is calculated as the product
 of the reaction rate and the Faraday constant. The concentration profiles for each
-step are saved for animation purposees and the voltammogram is plotted as a 
+step are saved for animation purposes and the voltammogram is plotted as a 
 standard $E$ vs. $j$ graph using the "plotGraph" helper function. The concentration 
 profiles are also plotted as $C_O$ vs $x$ and $C_R$ vs $x$, using the profiles at 
 time steps as frames for the animation.
 
 #pagebreak()
+
+// NOTE: Resultados
 
 #v(2.5cm)
 #weird(16pt, 11pt, "7. R", "ESULTS AND DISCUSSION") 
@@ -801,12 +809,12 @@ the transition from the continuous physical laws to the numerical approximations
 required for computational execution.
 
 == 7.1 Butler Volmer
-The Butler volme output graph must imitate closely the graph studied in "Química 
+The Butler-Volmer output graph must imitate closely the graph studied in "Química 
 Física 3", that means: at an overpotential of 0 V, the current density must be exactly 
 0 A/$m^2$. This represents the system at equilibrium where the anodic and cathodic 
 currents cancel each other out. There also must be a linear region at small 
-overpotentials ($eta < 10^(-4)V$), where the curve must look like a straight line where
-current is directly proportional to overpotential. At larger overpotentials ($abs(eta) > 0.1V$)
+overpotentials ($eta < 10^(-4) V$), where the curve must look like a straight line where
+current is directly proportional to overpotential. At larger overpotentials ($abs(eta) > 0.1 V$)
 a Tafel region where current should increase exponentially as moving further away 
 from equilibrium must be noticeable. Finally, for a $beta_c = 0.5$, the positive 
 y-axis curve for oxidation ($eta > 0$) and the negative y-axis curve for reduction 
@@ -820,15 +828,15 @@ Then, ferrocinium reduction to ferrocene with the same concentration ($E_"eq" = 
 and with 10 times the concentration of the oxidized species ($E_"eq" = 0.46$) was tried:
 #figure(
 image("test1.png", width: 45%),
-caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-4) "mol", ["Fc"] = 10^(-4) "mol"$]
+caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-4) "mol/"m^3, ["Fc"] = 10^(-4) "mol/"m^3$]
 )
 #figure(
 image("test2.png", width: 45%),
-caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-3) "mol", ["Fc"] = 10^(-4) "mol"$]
+caption: [$"Fc"^+ + e^- -> "Fc" "with" ["Fc"^+] = 10^(-3) "mol/"m^3, ["Fc"] = 10^(-4) "mol/"m^3$]
 )
 
 == 7.2 Rotating Disk Electrode
-The Rotating Disk Electrode output graph must imitate properly a graph resembling the function 
+The Rotating Disk Electrode output graph must follow properly a graph resembling the function 
 $sqrt(x)$, as the graph measures current vs RPM and the Levich equation (Eq.11) states 
 $i_L prop omega^(1/2)$. The Levich equation states the limit intensity must be linearly 
 proportional to both the bulk concentration and electrode area. Testing the relation of 
@@ -838,17 +846,17 @@ First, the standard ferrocene measurement with common parameters was tried:
 image("rpmtest2.png", width: 45%),
 caption: [Standard limit intensity measurement with ferrocene]
 )
-As the afromentioned proportionally could be checked, obtaining  $i_L = 2 10^(-4)A$.  Next 
+The afromentioned proportionally could be checked, obtaining  $i_L = 2 " " 10^(-4)A$.  Next 
 the linear relation with concentration and area was tested. With the same parameters, 
 only varying concentration first, then area, the resulting plots were obtained:
 #figure(
 image("rpmtest3.png", width: 45%),
-caption: [10 times the concentration]
+caption: [Limit current for 10 times the concentration of reactants]
 )
 
 #figure(
 image("rpmtest4.png", width: 45%),
-caption: [10 times the area]
+caption: [Limit current for 10 times the area of the electrode]
 )
 
 == 7.3 Battery Discharge
@@ -858,17 +866,17 @@ the real graph. This does not mean no test is needed to be done, as parameters c
 be given as an input. The terminal voltage obtained from Eq.19 has two terms: OCV 
 is directly interpolated from experimental output, and the other is a product of
 $I(t)$, which we assume constant, and $R_"int"$, which is a constant. The only 
-modification $I R_"int"$ can bring is a constant change on the y-axis, but no
-meaningful slope change. 
+modification $I R_"int"$ can bring is a constant change on the y-axis, but not a
+slope change. 
 
 #figure(
 image("battest1.png", width: 50%),
-caption: [Basline]
+caption: [Battery Discharge]
 )
 
 #figure(
 image("battest2.png", width: 50%),
-caption: [10 times $I R_"int"$]
+caption: [Battery Discharge for 10 times $I R_"int"$]
 )
 
 The rate at which SOC(t) changes, through Eq.37, is the only meaningful change, 
@@ -876,7 +884,7 @@ as can be seen in the next graph:
 
 #figure(
 image("battest3.png", width: 50%),
-caption: [$1 / 5 Q_"nom"$]
+caption: [Battery Discharge for $"1/5" Q_"nom"$]
 )
 As seen, even if the time until full discharge is shorter, the discharge curve 
 still mantains the same form. That's because at constant discharge current the 
@@ -890,31 +898,31 @@ To properly test the resulting voltammogram, the following must be considered:
 Peak separation ($Delta E_p$), the ratio of anodic current density $j_(p,a)$ to 
 cathodic current density $j_(p,a)$, Randles-Sevcik linearity and numerical stability 
 and precision between numerical methods. To ensure the highest precision with the 
-tests, Runge-Kutta 4 will be chosen as the baseline.\
+tests, Runge-Kutta 4 will be chosen as the reference method.
 
 A common voltammogram for a linear sweep has two peaks, one positive, denoting 
 the anodic current from the oxidation, and one negative, denoting the cathodic 
-current from the reduction. The standard ferrocene test will be the baseline. 
+current from the reduction. The standard ferrocene test will be the system considered. 
 
 #figure(
 image("CVtest1.png", width: 50%),
-caption: [Baseline, ferrocene, $C_(O,"bulk") = 1 "mM", C_(R,"bulk") = 1 "mM"$]
+caption: [Voltammogram, ferrocene, $C_(O,"bulk") = 1 "mM", C_(R,"bulk") = 1 "mM"$]
 )
 
 
 #figure(
 image("CVtest2.png", width: 50%),
-caption: [$1/1000 k_0$ ]
+caption: [As figure 16, but $1/1000 k_0$ ]
 )
 
 #figure(
 image("CVtest3.png", width: 50%),
-caption: [$beta_c = 0.75$]
+caption: [As figure 16, but $beta_c = 0.75$]
 )
 
 #figure(
 image("CVtest4.png", width: 50%),
-caption: [$E_"start"$ not at the equilibrium potential]
+caption: [As figure 16, but $E_"start"$ not at the equilibrium potential]
 )
 
 A strange peak appears at the beggining of the simulation when starting at a 
@@ -958,7 +966,7 @@ the test scans, but it can be seen how Randall-Sevcik's relation is followed.
 #weird(16pt, 11pt, "8. I", "MPROVEMENTS AND OPTIMIZATIONS") 
 
 The current program can be improved and optimized further, however, as the program 
-was made for a pedagological point some limits were assumed. This section will 
+was made prioritizing a pedagogical viewpoint some limits were assumed. This section will 
 cover further improvements for the overall structure and performance of the program.\
 First, the UI is very minimal, only a few lines of text printed to the terminal. 
 The UI could be improved greatly by using tools like Streamlit or Custom Tkinter.
@@ -967,15 +975,14 @@ yet elegant interface, while Custom Tkinter would make of the program an applica
 with its own window and a personalized interface, tailored to the code written.\
 To make the code more readable, Object Oriented Programming (OOP), along classes and 
 methods could make the code modular and more readable, in case other programmers 
-join the codebase. Other external modules would too make the code more compact, as 
-other than pedagologically, no real need to write the numerical algorithms existed. 
+join the codebase. Other external modules would also make the code more compact. 
 Using already existing functions from well known modules will make the code clearer 
 and possibly faster, as several optimizations can be done for the solvers. \ Another 
-drawback is the way inputs are provided to the program. Thanks to the "error" function 
+aspect that could be improved is the way inputs are provided to the program. Thanks to the "error" function 
 which handles bad inputs the program won't crash, but for batches of simulations, 
 manually inputing each parameter every time a simulation is needed might be a cause of 
 unnecessary burden for the user. Taking as input a .json file or a .yaml would be a 
-gret improvement over the current input system. Although less intuitive for new users, 
+great improvement over the current input system. Although less intuitive for new users, 
 the easy reproductibility and the possibility of providing multiple inputs would allow 
 for easy parallelization and for supercomputers to not wait idle waiting while another 
 input is being sent.\
@@ -992,7 +999,7 @@ the project in other programming languages which are compiled, like C, C++, or n
 programming languages like Zig or Rust would benefit from compiler optimizations, 
 enabling a huge optimization. It should be mentioned that if performance is the 
 only objective even if compiled, programming languages like Java or C\# should be 
-avoided, as not requiring memmory mangement implies a underlying garbage collector, 
+avoided, as not requiring memory management implies a underlying garbage collector, 
 which slows down the runtime process. To truly optimize it fully, the cache should 
 be taken advantage of as much as possible. Compressing the data needed in such a 
 way all is contained in a the cache will turn the program into a very performant 
@@ -1012,15 +1019,15 @@ instructions perform multiple operations in one CPU cycle.
 #v(2.5cm)
 #weird(16pt, 11pt, "9. C", "ONCLUSIONS") 
 
-To conclude this TFG, the author would like to think the pedagological objective has 
-been achieved. A program has been made, which simulates accurately real phenomena 
-using advanced numerical methods, as seen in the sections before.
+To conclude this TFG, the author would like to think that the pedagogical objective has 
+been achieved. A program has been made, which simulates accurately electrochemical phenomena 
+using numerical methods, as seen in the sections before.
 #pagebreak()
 
 // NOTE: References and notes
 
 #v(2.5cm)
-#weird(16pt, 11pt, "10. R", "ERENCES AND NOTES") 
+#weird(16pt, 11pt, "10. R", "EFENCES AND NOTES") 
 
 1. Bard, A. J., & Faulkner, L. R. (2001). Electrochemical Methods: Fundamentals and Applications. John Wiley & Sons.\
 2. Atkins, P., & de Paula, J. (2014). Physical chemistry (10th ed.). Oxford University Press.
@@ -1028,6 +1035,7 @@ using advanced numerical methods, as seen in the sections before.
 4. Zhang, S., Zhang, Y., Liu, Y., & Zhang, J. (2022). SOC estimation of lithium-ion battery based on an improved equivalent circuit model and an improved adaptive unscented Kalman filter. Energies, 15(23), 9142. https://doi.org/10.3390/en15239142
 5. Press, W. H., Teukolsky, S. A., Vetterling, W. T., & Flannery, B. P. (2007). Numerical recipes: The art of scientific computing (3.ª ed.). Cambridge University Press.
 6. Elgrishi, N., Rountree, K. J., McCarthy, B. D., Rountree, E. S., Eisenhart, T. T., y Dempsey, J. L. (2018). A Practical Beginner’s Guide to Cyclic Voltammetry. Journal of Chemical Education, 95(2), 197–206 . https://doi.org/10.1021/acs.jchemed.7b00361.
+7. Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., Wieser, E., Taylor, J., Berg, S., Smith, N. J., Kern, R., Picus, M., Hoyer, S., van Kerkwijk, M. H., Brett, M., Haldane, A., & del Río, J. F. (2020). Array programming with NumPy. Nature, 585(7825), 357–362. https://doi.org/10.1038/s41586-020-2649-2
 
 #pagebreak()
 
@@ -1038,13 +1046,13 @@ using advanced numerical methods, as seen in the sections before.
 
 - $[O]:$ oxidized species
 - $[R]:$ reduced species
-- $e^-:$ electron particle with its negative charge 
+- $e^-:$ electron with its negative charge 
 - $nu_a:$ anodic reaction rate 
 - $nu_c:$ cathodic reaction rate
 - $k_a:$ anodic constant 
 - $k_c:$ cathodic constant 
-- $A:$ Arhenius preexponent
-- $Delta G^dagger.double:$  Gibbs activation energy
+- $k_b:$ Boltzmann's constant
+- $Delta G^dagger.double:$  Gibbs activation free energy
 - $R:$ ideal gas constant
 - $T:$ temperature
 - $j:$ current density
@@ -1058,6 +1066,8 @@ using advanced numerical methods, as seen in the sections before.
 - $D:$ diffusion coefficient
 - $J:$ diffusion flux
 - $O(Delta x^n):$ Error of order n
+- SOC: State of Charge
+- OCV: Open Current Voltage
 - RK: Runge-Kutta
 - ODE: Ordinary Differential Equation
 - PDE: Partial Differential Equation
