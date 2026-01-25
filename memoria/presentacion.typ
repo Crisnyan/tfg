@@ -15,7 +15,6 @@
 
 == Índice 
 #components.adaptive-columns(outline(title: none, indent: 1em))
-= Introducción
 == Electroquímica
 #grid(columns: (1fr, 2fr),[
 #image("threeElectrode.jpg", height: 80%)
@@ -24,13 +23,25 @@
 ])
 #grid(columns: (4fr, 3fr, 3fr ),[
   #v(2em)
-#image("BVwiki.png", width: 103%)
+  #set text(size: 20pt)
+#figure(
+image("BVwiki.png", width: 103%),
+    caption: [#v(0.5em)$j = j_0 (e^(((1 - beta) n F eta)/(R T)) - e^(-(beta n F eta)/(R T)))$]
+  )
 ],[
   #v(2em)
-#image("RDEimg.png", width: 100%)
+  #set text(size: 19pt)
+  #figure(
+image("RDEimg.png", width: 100%),
+    caption: [#v(0.5em)$i_L = 0.62n F A D^(2/3) omega^(1/2) nu^(-1/6) C$]
+  )
 ],[
 #v(2em)
-#image("dischargelot.png", width: 120%, height: 60%)
+  #set text(size: 19pt)
+  #figure(
+image("dischargelot.png", width: 120%, height: 60%),
+    caption: [#h(1em) $V = "OCV"("SOC") - I R_"int"$]
+  )
 ]
 )
 #grid(columns: (1fr, 1fr),[
@@ -120,9 +131,8 @@ $ f''(x) approx (f(x + Delta x) - 2f(x) + f(x - Delta x)) / (Delta x^2) $
 #set text(size: 24pt)
 - Enfoque Pedagógico y Didáctico
 - Desarrollo técnico de sistemas electroquímicos
-- Consolidación del Conocimiento]
+- Obtención de output visual sobre los sistemas]
 
-= Resultados
 == Implementación
 #grid(columns: (1fr, 1fr, 1fr), gutter: 20pt,
 [
@@ -150,6 +160,7 @@ image("CyclicVoltammetryStructure.png", height: 70%),
     caption: "CyclicVoltammetry.py"
     )
 
+= Resultados
 == ButlerVolmer.py
 #grid(columns: (1fr, 1fr),[
 #set text(size: 17pt)
@@ -360,6 +371,12 @@ caption: [$E = E_"eq"$, [Red] = [Ox]]
 image("CVp6.png", width: 100%),
 caption: [Se alcanza el pico de reducción, las concentraciones lejos del electrodo tardan en ecualizarse]
 )
+],[
+#set text(size: 18pt)
+#figure(
+image("CVpp7.png", width: 100%),
+caption: [Se repite el ciclo]
+)
   ])
 
 = Conclusions
@@ -370,28 +387,15 @@ caption: [Se alcanza el pico de reducción, las concentraciones lejos del electr
 - Achievement of the pedagogical objective]
 #pagebreak()
 #align(center + horizon)[#set text(size: 70pt); *GRACIAS POR  SU ATENCIÓN*]
-#grid(columns: (1fr, 1fr), gutter: 8pt, [
-#image("BV1.png", width: 100%)
-],[
-#image("BV2.png", width: 100%)
-],[
-#image("RotatingDiskElectrode.png", width: 100%)
-],[
+#image("BV1.png", height: 100%)
+#image("BV2.png", height: 100%)
+#image("RotatingDiskElectrode.png", height: 100%)
 #image("BatteryDischarge.png", height: 100%)
-],[
-#image("CVpp1.png", width: 100%)
-],[
-#image("CVpp2.png", width: 100%)
-],[
-#image("CVpp3.png", width: 100%)
-],[
-#image("CVpp4.png", width: 100%)
-],[
-#image("CVpp5.png", width: 100%)
-],[
+#image("CVpp1.png", height: 100%)
+#image("CVpp2.png", height: 100%)
+#image("CVpp3.png", height: 100%)
+#image("CVpp4.png", height: 100%)
+#image("CVpp5.png", height: 100%)
 #image("CVpp6.png", width: 100%)
-],[
 #image("CVp7.png", height: 100%)
-],[
-#image("CVp8.png", width: 100%)
-])
+#image("CVp8.png", height: 100%)
